@@ -1,4 +1,4 @@
-Package: SeuratWizard
+Package: SeuratV3Wizard
 Title: User Interface to Seurat (Single Cell) library in R Shiny
 Version: 2.0.0.0000
 Authors@R: person("Ayman", "Yousif", email = "ay21@nyu.edu", role = c("aut", "cre"))
