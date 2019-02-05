@@ -1,0 +1,12 @@
+name: SeuratShiny
+title: SeuratShiny
+username:
+account: nyuad-cgsb
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 376656
+bundleId: 1470978
+url: https://nyuad-cgsb.shinyapps.io/SeuratShiny/
+when: 1531119990.43034
+asMultiple: FALSE
+asStatic: FALSE

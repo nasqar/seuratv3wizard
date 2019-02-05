@@ -1,0 +1,106 @@
+#loading-bar-spinner.spinner {
+    left: 50%;
+    margin-left: -20px;
+    top: 50%;
+    z-index: 19 !important;
+    animation: loading-bar-spinner 1000ms linear infinite;
+    float: right;
+}
+
+#loading-bar-spinner.spinner .spinner-icon {
+    width: 20px;
+    height: 20px;
+    border:  solid 4px transparent;
+    border-top-color:  #00C8B1 !important;
+    border-left-color: #00C8B1 !important;
+    border-radius: 50%;
+}
+
+@keyframes loading-bar-spinner {
+  0%   { transform: rotate(0deg);   transform: rotate(0deg); }
+  100% { transform: rotate(360deg); transform: rotate(360deg); }
+}
+
+
+
+hr {
+  border-top: 1px solid #bbb8b8;
+}
+
+body {
+  font-size: 16px;
+}
+
+
+.checkmark__circle {
+  stroke-dasharray: 166;
+  stroke-dashoffset: 166;
+  stroke-width: 2;
+  stroke-miterlimit: 10;
+  stroke: #7ac142;
+  fill: none;
+  animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+
+.checkmark {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: block;
+  stroke-width: 6;
+  stroke: #fff;
+  stroke-miterlimit: 10;
+  box-shadow: inset 0px 0px 0px #7ac142;
+  animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+}
+
+.checkmark__check {
+  transform-origin: 50% 50%;
+  stroke-dasharray: 48;
+  stroke-dashoffset: 48;
+  animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+}
+
+@keyframes stroke {
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes scale {
+  0%, 100% {
+    transform: none;
+  }
+  50% {
+    transform: scale3d(1.1, 1.1, 1);
+  }
+}
+@keyframes fill {
+  100% {
+    box-shadow: inset 0px 0px 0px 30px #7ac142;
+  }
+}
+
+
+
+
+/* Fix indent icon on side bar*/
+.sidebar-menu>li .badge,.sidebar-menu>li .label {
+    margin-right: 0;
+}
+
+
+
+
+.mybuttonclass{background-color:#CD0000;} .mybuttonclass{color: #fff;} .mybuttonclass{border-color: #9E0000;}
+
+.BoxArea2 { padding:19px; margin: 5px; border: 3px solid; border-color:#6d9cce; border-radius:10px;}
+
+.BoxArea { padding:19px; margin: 5px; border: 3px solid; border-color:rgba(24, 188, 156, 1); border-radius:10px; background-color:#fdfdfd; opacity: 0.90;}
+
+.BoxArea4 { padding:19px; margin: 5px; border: 3px solid; border-color:rgb(214, 226, 232); border-radius:5px;}
+
+.clearBoth{ clear:both; }
+
+a > .highlight { background-color:#fdfdfd;}
+
+.modal-dialog { width: 50%;}

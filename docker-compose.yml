@@ -1,0 +1,28 @@
+version: "3"
+
+##---------------------------------------------------------------------
+# To run in the foreground:
+# `docker-compose up`
+# To Run in the background:
+# `docker-compose up -d`
+# If you make any changes to the docker file you will need to rebuild
+# `docker compose up --build`
+##---------------------------------------------------------------------
+
+
+services:
+  seurat_wizard:
+    ## For this configuration we build from the local setup
+    ## But for docker-swarm we will have to have an actual image
+    build: .
+    ports:    # Set up ports exposed for other containers to connect to
+    - 5555:5555
+    volumes:
+    - ./:/home/docker/app
+    networks:
+    - app-tier
+
+networks:
+  app-tier:
+    driver: bridge
+

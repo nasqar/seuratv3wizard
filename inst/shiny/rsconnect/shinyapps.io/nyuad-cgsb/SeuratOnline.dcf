@@ -1,0 +1,12 @@
+name: SeuratOnline
+title: SeuratOnline
+username:
+account: nyuad-cgsb
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 376649
+bundleId: 1470956
+url: https://nyuad-cgsb.shinyapps.io/SeuratOnline/
+when: 1531118327.85572
+asMultiple: FALSE
+asStatic: FALSE

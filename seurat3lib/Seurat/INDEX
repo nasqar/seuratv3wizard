@@ -1,0 +1,159 @@
+ALRAChooseKPlot         ALRA Approximate Rank Selection Plot
+AddMetaData             Add in metadata associated with either cells or
+                        features.
+AddModuleScore          Calculate module scores for featre expression
+                        programs in single cells
+AnchorSet-class         The AnchorSet Class
+Assay-class             The Assay Class
+AugmentPlot             Augments ggplot2-based plot with a PNG image.
+AverageExpression       Averaged feature expression by identity class
+BarcodeInflectionsPlot
+                        Plot the Barcode Distribution and Calculated
+                        Inflection Points
+BlackAndWhite           Create a custom color palette
+BuildClusterTree        Phylogenetic Analysis of Identity Classes
+CalculateBarcodeInflections
+                        Calculate the Barcode Distribution Inflection
+CaseMatch               Match the case of character vectors
+CellCycleScoring        Score cell cycle phases
+CellScatter             Cell-cell scatter plot
+Cells                   Get cells present in an object
+CollapseSpeciesExpressionMatrix
+                        Slim down a multi-species expression matrix,
+                        when only one species is primarily of
+                        interenst.
+CombinePlots            Combine ggplot2-based plots into a single plot
+Command                 Get SeuratCommands
+CreateAssayObject       Create an Assay object
+CreateDimReducObject    Create a DimReduc object
+CreateSeuratObject      Create a Seurat object
+CustomDistance          Run a custom distance function on an input data
+                        matrix
+DefaultAssay            Get the default assay
+DietSeurat              Slim down a Seurat object
+DimHeatmap              Dimensional reduction heatmap
+DimPlot                 Dimensional reduction plot
+DimReduc-class          The Dimmensional Reduction Class
+DoHeatmap               Feature expression heatmap
+DotPlot                 Dot plot visualization
+ElbowPlot               Quickly Pick Relevant Dimensions
+Embeddings              Get cell embeddings
+ExpMean                 Calculate the mean of logged values
+ExpSD                   Calculate the standard deviation of logged
+                        values
+ExpVar                  Calculate the variance of logged values
+ExportToCellbrowser     Export Seurat object for UCSC cell browser
+FeatureLocator          Feature Locator
+FeaturePlot             Visualize 'features' on a dimensional reduction
+                        plot
+FeatureScatter          Scatter plot of single cell data
+FetchData               Access cellular data
+FindAllMarkers          Gene expression markers for all identity
+                        classes
+FindClusters            Cluster Determination
+FindConservedMarkers    Finds markers that are conserved between the
+                        two groups
+FindIntegrationAnchors
+                        Find integration anchors
+FindMarkers             Gene expression markers of identity classes
+FindNeighbors           SNN Graph Construction
+FindTransferAnchors     Find transfer anchors
+FindVariableFeatures    Find variable features
+GetAssay                Get an assay from an object
+GetAssayData            Accessor function for multimodal data
+GetIntegrationData      Get integation data
+Graph-class             The Graph Class
+HTODemux                Demultiplex samples based on data from cell
+                        'hashing'
+HTOHeatmap              Hashtag oligo heatmap
+HVFInfo                 Get highly variable feature information
+HoverLocator            Hover Locator
+Idents                  Get, set, and manipulate an object's identity
+                        classes
+IntegrateData           Integrate data
+IntegrationData-class   The IntegrationData Class
+JS                      Get JackStraw information
+JackStraw               Determine statistical significance of PCA
+                        scores.
+JackStrawData-class     The JackStrawData Class
+JackStrawPlot           JackStraw Plot
+Key                     Get a key
+L2CCA                   L2-Normalize CCA
+L2Dim                   L2-normalization
+LabelClusters           Label clusters on a ggplot2-based scatter plot
+LabelPoints             Add text labels to a ggplot2 plot
+Loadings                Get feature loadings
+LocalStruct             Calculate the local structure preservation
+                        metric
+LogNormalize            Normalize raw data
+LogVMR                  Calculate the variance to mean ratio of logged
+                        values
+MetaFeature             Aggregate expression of multiple features into
+                        a single feature
+MinMax                  Apply a ceiling and floor to all values in a
+                        matrix
+Misc                    Access miscellaneous data
+MixingMetric            Calculates a mixing metric
+NormalizeData           Normalize Data
+OldWhichCells           Identify cells matching certain criteria
+PCASigGenes             Significant genes from a PCA
+PolyDimPlot             Polygon DimPlot
+PolyFeaturePlot         Polygon FeaturePlot
+ProjectDim              Project Dimensional reduction onto full dataset
+Read10X                 Load in data from 10X
+Read10X_h5              Read 10X hdf5 file
+ReadAlevin              Load in data from Alevin pipeline
+ReadAlevinCsv           Load in data from Alevin pipeline
+RegressRegNB            Use regularized negative binomial regression to
+                        normalize UMI count data
+RelativeCounts          Normalize raw data to fractions
+RenameCells             Rename cells
+RidgePlot               Single cell ridge plot
+RunALRA                 Run Adaptively-thresholded Low Rank
+                        Approximation (ALRA)
+RunCCA                  Perform Canonical Correlation Analysis
+RunICA                  Run Independent Component Analysis on gene
+                        expression
+RunPCA                  Run Principal Component Analysis
+RunTSNE                 Run t-distributed Stochastic Neighbor Embedding
+RunUMAP                 Run UMAP
+SampleUMI               Sample UMI
+ScaleData               Scale and center the data.
+ScoreJackStraw          Compute Jackstraw scores significance.
+SelectIntegrationFeatures
+                        Select integration features
+SetAssayData            Setter for multimodal data
+SetIntegrationData      Set integation data
+Seurat-class            The Seurat Class
+SeuratCommand-class     The SeuratCommand Class
+SeuratTheme             Seurat Themes
+SplitObject             Splits object into a list of subsetted objects.
+Stdev                   Get the standard deviations for an object
+StopCellbrowser         Stop Cellbrowser web server
+SubsetByBarcodeInflections
+                        Subset a Seurat Object based on the Barcode
+                        Distribution Inflection Points
+SubsetData              Return a subset of the Seurat object
+Tool                    Get and set additional tool data
+TopCells                Find cells with highest scores for a given
+                        dimensional reduction technique
+TopFeatures             Find features with highest scores for a given
+                        dimensional reduction technique
+TransferData            Transfer Labels
+UpdateSeuratObject      Update old Seurat object to accomodate new
+                        features
+VariableFeaturePlot     View variable features
+VariableFeatures        Get and set variable feature information
+VizDimLoadings          Visualize Dimensional Reduction genes
+VlnPlot                 Single cell violin plot
+WhichCells              Identify cells matching certain criteria
+[.Seurat                Subset a Seurat object
+as.Seurat               Convert Seurat objects to other classes and
+                        vice versa
+as.sparse               Convert between data frames and sparse matrices
+cc.genes                Cell cycle genes
+merge.Assay             Merge Seurat Objects
+pbmc_small              A small example version of the PBMC dataset
+print.DimReduc          Print the results of a dimensional reduction
+                        analysis
+seurat-class            The Seurat Class

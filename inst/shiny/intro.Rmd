@@ -1,0 +1,125 @@
+---
+title: "Intro"
+author: "Ayman Y"
+date: "July 15, 2018"
+output: html_document
+runtime: shiny
+---
+
+## **Introduction**
+
+---
+
+This is a web-based interactive (wizard style) application to perform a **guided single-cell RNA-seq data analysis and clustering** based on <a href="https://satijalab.org/seurat/" target="_blank"><strong>Seurat</strong></a>. 
+
+The wizard style makes it intuitive to go back between steps and adjust parameters based on different outputs/plots, giving the user the ability to use feedback in order to guide the analysis iteratively.
+
+It is meant to provide an intuitive interface for researchers to easily **upload, analyze, visualize, and explore single-cell RNA-seq data** interactively with no prior programming knowledge in R.
+
+It is based on <a href="https://satijalab.org/seurat/" target="_blank"><strong>Seurat</strong></a>, an R package designed for QC, analysis, and exploration of single cell RNA-seq data.
+
+The application follows the <a href="https://satijalab.org/seurat/pbmc3k_tutorial_v3.html" target="_blank">Seurat - Guided Clustering Tutorial</a> <link> workflow closely. It also provides additional functionalities to further explore and visualize the data.
+
+See **Figure 1** below for a diagram that outlines all the workflow steps and their expected output
+
+<div class="col-md-12"><hr style="border-top: none;"></div>
+
+<p style="width: 100%;max-width:300px;margin: 10px auto;display: block;"><strong><em>Figure 1: Workflow (Click figure to enlarge)</em></strong></p>
+<a href="#" class="pop">
+    <div class="BoxArea4" style="width: 100%;max-width:300px;margin: 0 auto;display: block;">
+    <img src="www/seuratWorkflow.png" alt="Workflow" style="width: 100%;max-width:300px;margin: 0 auto;display: block;"/>
+    </div>
+</a>
+
+<div class="modal fade" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">              
+      <div class="modal-body">
+      	<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <img src="" class="imagepreview" style="width: 100%;" >
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="col-md-12"><hr style="border-top: none;"></div>
+
+## **Input Data Types**
+
+---
+
+This application accepts the following types of input data:
+
+### 1. Example data (Demo):
+
+- For demo purposes, you can select "Example data"
+
+- That will automatically load the PBMC data used in the <a href="https://satijalab.org/seurat/pbmc3k_tutorial_v3.html" target="_blank">tutorial</a>
+
+- You can follow the steps afterwards to run the analysis mirroring the tutorial in order to get familiar with the app
+
+### 2. Upload your own data (gene counts):
+
+<div class="row">
+
+<div class="col-md-6">
+<ul>
+<li><p>A .csv/.txt file that contains a <strong>table of the gene counts</strong></p></li>
+<li><p>The first column should have gene names/ids followed by columns for sample counts. The file can be either <strong>comma or tab delimited</strong></p></li>
+<li><p>If your counts are not merged, you can use this <a href="http://nasqar.abudhabi.nyu.edu/countMerger">Count Merger</a> to consolidate all your sample count files</p></li>
+<li><p>Make sure cell/column names do <strong>NOT contain underscores _</strong> unless they are <strong>replicates</strong></p></li>
+<li><p>For replicates, denote column names with underscore plus the replicate number (eg. Sample_1)</p></li>
+<li><p>First column can either contain gene.ids or gene.names</p></li>
+<li><p>For a sample file, click <a href="www/sampleCounts.csv" target="_blank">here</a></p></li>
+</ul>
+</div>
+
+
+<div class="col-md-6">
+
+<p><strong><em>Figure 2: Eg. counts file</em></strong></p>
+<div class="BoxArea4" style="width: 100%;margin: 0 auto;display: block;">
+    <img src="www/sampleTable_norep.png" alt="Sample file" style="width: 100%;"/>
+</div>
+
+
+</div>
+
+</div>
+
+<div class="col-md-12"><hr style="border-top: none;"></div>
+### 2. 10X data
+
+- This option requires uploading 3 files: 1 .mtx file, and 2 .tsv files
+
+- See the example in the <a href="https://satijalab.org/seurat/pbmc3k_tutorial_v3.html" target="_blank">tutorial</a>, or click <a href="https://s3-us-west-2.amazonaws.com/10x.files/samples/cell/pbmc3k/pbmc3k_filtered_gene_bc_matrices.tar.gz">here</a> to download the PBMC data.
+
+<div class="col-md-12"><hr style="border-top: none;"></div>
+## **Run Results**
+---
+### 1. Data Output
+There will be plenty of output information from major steps, some of which will be displayed and/or downloadable
+- Genes in PCs
+- List of cells in each cluster
+- List of differentially expressed genes
+- Seurat Object (.RObj) containing all steps and computed data output
+
+### 2. Visualization
+Various forms of visualizations are included:
+* **QC/Filter**
+    * Violin Plot
+    * Gene Plot
+    * Dispersion Plot
+* **Dimensionality Reduction**
+    * PCA Plot
+    * Heatmap
+* **Clustering**
+    * Jackstraw / Elbow Plots
+    * tSNE Plot
+* **Gene Expression**
+    * Violin Plot
+    * Feature Plot
+
+---
+
