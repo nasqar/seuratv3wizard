@@ -6,7 +6,7 @@ require(DT)
 require(shiny)
 #require(Seurat)
 #v3
-library(Seurat, lib.loc="../../Seurat")
+library(Seurat, lib.loc="./Seurat")
 
 require(dplyr)
 require(Matrix)
