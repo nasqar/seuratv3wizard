@@ -49,3 +49,5 @@ if(!require(ggplot2)){
   install.packages("ggplot2")
   library(ggplot2)
 }
+
+devtools::install_github(lib='',repo = 'satijalab/seurat', ref = 'release/3.0', force=T)
