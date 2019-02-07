@@ -105,10 +105,9 @@ ui <- tagList(
       '
       <p align="center" width="4">Developed and maintained by: Core Bioinformatics, Center for Genomics and Systems Biology, NYU Abu Dhabi</p>
       <p align="center" width="4">Copyright (C) 2016, code licensed under GPLv3</p>
-      <p align="center" width="4">Using Seurat version 3.0.0.9 (Dev)</p>
+      <p align="center" width="4">Using Seurat version 3.0-alpha </p>
       <p align="center" width="4"><strong>Acknowledgements: </strong></p>
-      <p align="center" width="4">1) Rahul Satija, Andrew Butler and Paul Hoffman (2017). Seurat: Tools for Single Cell Genomics. R package
-      version 3.0.0.9 (Dev) . <a href="https://CRAN.R-project.org/package=Seurat" target="_blank">https://CRAN.R-project.org/package=Seurat</a></p>
+      <p align="center" width="4">1) Rahul Satija, Andrew Butler and Paul Hoffman (2017). Seurat: Tools for Single Cell Genomics. <a href="https://CRAN.R-project.org/package=Seurat" target="_blank">https://CRAN.R-project.org/package=Seurat</a></p>
       <p align="center" width="4">2) <a href="http://satijalab.org/seurat/" target="_blank">Satija Lab</a></p>'
   )
   ),
