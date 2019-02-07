@@ -7,7 +7,7 @@ You can try it online at http://nasqar.abudhabi.nyu.edu/SeuratV3Wizard
 
 ```
 devtools::install_github(repo = 'satijalab/seurat', ref = 'release/3.0')
-devtools::install_github("nasqar/SeuratV3Wizard")
+devtools::install_github("nasqar/seuratv3wizard")
 ```
 
 ## Run:
