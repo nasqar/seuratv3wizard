@@ -1,19 +1,20 @@
-# SeuratWizard: R Shiny interface for Seurat single-cell analysis library
+# SeuratV3Wizard: R Shiny interface for Seurat single-cell analysis library
 
 ## Online/Demo:
-You can try it online at http://nasqar.abudhabi.nyu.edu/SeuratWizard
+You can try it online at http://nasqar.abudhabi.nyu.edu/SeuratV3Wizard
 
 ## Local Install:
 
 ```
-devtools::install_github("nasqar/SeuratWizard")
+devtools::install_github(repo = 'satijalab/seurat', ref = 'release/3.0')
+devtools::install_github("nasqar/SeuratV3Wizard")
 ```
 
 ## Run:
 
 ```
-library(SeuratWizard)
-SeuratWizard()
+library(SeuratV3Wizard)
+SeuratV3Wizard()
 ```
 This will run on http://0.0.0.0:1234/ by default
 
@@ -24,7 +25,7 @@ To run on specific ip/port:
 ```
 ip = '127.0.0.1'
 portNumber = 5555
-SeuratWizard(ip,portNumber)
+SeuratV3Wizard(ip,portNumber)
 ```
 This will run on http://127.0.0.1:5555/
 
