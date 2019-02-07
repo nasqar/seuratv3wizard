@@ -17,7 +17,7 @@ require(ggplot2)
 
 ui <- tagList(
   dashboardPage(
-    dashboardHeader(title = "Seurat Wizard"),
+    dashboardHeader(title = "SeuratV3 Wizard"),
     dashboardSidebar(
       sidebarMenu(
         id = "tabs",
