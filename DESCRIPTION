@@ -17,4 +17,5 @@ Imports:
 	dplyr,
 	Matrix,
 	V8,
-	sodium
+	sodium,
+	rmarkdown
