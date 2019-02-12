@@ -18,6 +18,12 @@ SeuratV3Wizard()
 ```
 This will run on http://0.0.0.0:1234/ by default
 
+## Run using docker:
+
+```
+docker run -p 80:80 aymanm/seuratv3wizard
+```
+This will run on port 80
 ***
 
 To run on specific ip/port:
