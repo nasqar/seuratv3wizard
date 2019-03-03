@@ -31,7 +31,28 @@ tabItem(tabName = "tsneTab",
 
                                                               column(12,
                                                                      h4(strong("TSNE Plot")),
-                                                                     withSpinner(plotOutput(outputId = "tsnePlot"))
+                                                                     column(8,
+                                                                            withSpinner(plotOutput(outputId = "tsnePlot"))
+                                                                            ),
+                                                                     column(4,
+                                                                            box(title = "UCSC Cell Browser (Optional)", solidHeader = T, status = "primary", width = 12,
+                                                                              p("Use this cell browser to explore data visually:"),
+                                                                              p("1) Generate the cell browser data"),
+                                                                              p("2) Launch the browser in a new tab once data is generated"),
+                                                                              p( 
+                                                                                column(12,
+                                                                                       actionButton('viewCellBrowser', 'Generate Cell Browser data', class = "button button-3d button-block button-pill button-highlight")
+                                                                                       ),
+                                                                                conditionalPanel(
+                                                                                  "output.cellBrowserLinkExists",
+                                                                                  
+                                                                                         uiOutput("cellbrowserlink")
+                                                                                         
+                                                                                  )
+                                                                                
+                                                                              )
+                                                                            )
+                                                                            )
                                                               ),
                                                               tags$div(class = "clearBoth")
                                                      ),
@@ -70,6 +91,8 @@ tabItem(tabName = "tsneTab",
                                              icon = icon("download")
                                            )
                                          )
+                                         
+                                         
 
                         )
 

@@ -14,6 +14,8 @@ require(Matrix)
 require(V8)
 require(sodium)
 require(ggplot2)
+require(reticulate)
+require(uuid)
 
 ui <- tagList(
   dashboardPage(

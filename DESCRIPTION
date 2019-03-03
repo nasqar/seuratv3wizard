@@ -18,4 +18,6 @@ Imports:
 	Matrix,
 	V8,
 	sodium,
-	rmarkdown
+	rmarkdown,
+	reticulate,
+	uuid
