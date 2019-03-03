@@ -114,7 +114,7 @@ observe({
       folderuuid = UUIDgenerate()
       folderpath = paste0(tempdir(),"/pbmcellbrowser-",folderuuid)
       foldercbpath = paste0(getwd(),"/www/pbmcellbrowsercb-",folderuuid)
-      myValues$wwwcbpath = paste0("/pbmcellbrowsercb-",folderuuid,"/index.html")
+      myValues$wwwcbpath = paste0("/pbmcellbrowsercb-",folderuuid,"/index.html?ds=",pbmc@project.name)
       
       ExportToCellbrowser(pbmc, dir= folderpath, cb.dir=foldercbpath)
       
