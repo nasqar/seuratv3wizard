@@ -114,9 +114,14 @@ observe({
       folderuuid = UUIDgenerate()
       folderpath = paste0(tempdir(),"/pbmcellbrowser-",folderuuid)
       foldercbpath = paste0(getwd(),"/www/pbmcellbrowsercb-",folderuuid)
-      myValues$wwwcbpath = paste0("/pbmcellbrowsercb-",folderuuid,"/index.html?ds=",pbmc@project.name)
+      myValues$wwwcbpath = paste0(session$clientData$url_pathname,"pbmcellbrowsercb-",folderuuid,"/index.html?ds=",pbmc@project.name)
       
-      ExportToCellbrowser(pbmc, dir= folderpath, cb.dir=foldercbpath)
+      tryCatch({
+        ExportToCellbrowser(pbmc, dir= folderpath, cb.dir=foldercbpath)
+      }, error = function(e) {
+        print(e)
+      })
+      
       
       myValues$cellBrowserLinkExists = T
       
