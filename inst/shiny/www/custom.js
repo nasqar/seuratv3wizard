@@ -15,6 +15,8 @@ shinyjs.addStatusIcon = function(params)
       case 'loading':
         $("button.btn").removeClass("button-3d");
         $("button.btn").attr("disabled", "disabled");
+        
+        $("a.btn").addClass("hidden");
         menuitem.append('<div id="loading-bar-spinner" class="spinner"><div class="spinner-icon"></div></div>');
         break;
 
@@ -24,6 +26,8 @@ shinyjs.addStatusIcon = function(params)
     <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg>');
         $("button.btn").addClass("button-3d");
         $("button.btn").removeAttr("disabled");
+        
+        $("a.btn").removeClass("hidden");
         break;
 
       case 'next':

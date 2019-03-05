@@ -99,6 +99,57 @@ output$downloadClusterCells <- downloadHandler(
 
 )
 
+observe({
+  if(input$viewCellBrowser > 0)
+  {
+    withProgress(message = "Generating UCSC Cell Browser data",{
+      js$addStatusIcon("tsneTab","loading")
+      
+      pbmc = tsneReactive()$pbmc
+      
+      myValues$cellBrowserLinkExists = F
+      
+      shiny::setProgress(value = 0.4, detail = "please wait, this might take longer for big datasets ...")
+      
+      folderuuid = UUIDgenerate()
+      folderpath = paste0(tempdir(),"/pbmcellbrowser-",folderuuid)
+      foldercbpath = paste0(getwd(),"/www/pbmcellbrowsercb-",folderuuid)
+      myValues$wwwcbpath = paste0(session$clientData$url_pathname,"pbmcellbrowsercb-",folderuuid,"/index.html?ds=",pbmc@project.name)
+      
+      tryCatch({
+        ExportToCellbrowser(pbmc, dir= folderpath, cb.dir=foldercbpath)
+      }, error = function(e) {
+        print(e)
+      })
+      
+      
+      myValues$cellBrowserLinkExists = T
+      
+      js$addStatusIcon("tsneTab","done")
+      
+    })
+  }
+})
+
+output$cellBrowserLinkExists <-
+  reactive({
+    if(!is.null(myValues$cellBrowserLinkExists) || dir.exists(paste0(getwd(),"/www/pbmcellbrowser")))
+      return(myValues$cellBrowserLinkExists)
+    
+    FALSE
+  })
+outputOptions(output, 'cellBrowserLinkExists', suspendWhenHidden=FALSE)
+
+
+
+
+output$cellbrowserlink <- renderUI({
+  column(12,
+         hr(),
+    a('Launch Cellbrowser ',href = myValues$wwwcbpath, target = "_blank", class = "btn button button-3d button-pill button-action")
+  )
+})
+
 observeEvent(input$nextClusterMarkers, {
   GotoTab("findMarkersTab")
 })

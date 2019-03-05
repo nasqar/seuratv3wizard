@@ -16,17 +16,18 @@ tabItem(tabName = "finishTab",
 
             column(12,
                    column(
-                     6,
+                     3,
                      actionButton('generateSeuratFile', 'Generate Seurat Robj', class = "button button-3d button-block button-pill button-royal button-large")
                    ),
+                   
                    column(
-                     6,
+                     3,
                      conditionalPanel(
                        "output.seuratFileExists",
                        downloadButton('downloadRObj', 'Download Seurat Obj', class = "button button-3d button-block button-pill button-action button-large")
                      )
                    )
-                   )
+             )
             ,
             div(style = "clear:both;")
 
