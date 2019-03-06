@@ -40,7 +40,7 @@ This will run on http://127.0.0.1:5555/
 
 ![alt text](screenshots/screenshot-vln.png "Vln Plots")
 
-![alt text](screenshots/screenshot-biomarkers.png "Cluster Biomarkers")
+![alt text](screenshots/screenshot-tsne.png "Cluster Biomarkers")
 
 ## Acknowledgements:
 
