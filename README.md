@@ -10,6 +10,8 @@ devtools::install_github(repo = 'satijalab/seurat', ref = 'release/3.0')
 devtools::install_github("nasqar/seuratv3wizard")
 ```
 
+Optional: For ucsc cellbrowser support, make sure to follow the installation instructions [here](https://cellbrowser.readthedocs.io)
+
 ## Run:
 
 ```
