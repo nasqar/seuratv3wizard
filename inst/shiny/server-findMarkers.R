@@ -186,6 +186,23 @@ output$clusterMarkersAllAvailable <-
   })
 outputOptions(output, 'clusterMarkersAllAvailable', suspendWhenHidden=FALSE)
 
+output$clusterHeatmap <- renderPlot({
+  if(input$generateHeatmap > 0)
+  {
+  withProgress(message = "Processing , please wait",{
+    
+    pbmc = tsneReactive()$pbmc
+    
+    isolate({
+      allmarkers = findClusterMarkersAllReactive()$clustermarkers
+      allmarkers %>% group_by(cluster) %>% top_n(n = input$topGenesPerCluster, wt = avg_logFC) -> selectedGenes
+    })
+    return(DoHeatmap(object = pbmc, features = selectedGenes$gene))
+    
+  })
+}
+})
+
 
 output$VlnMarkersPlot = renderPlot({
 
