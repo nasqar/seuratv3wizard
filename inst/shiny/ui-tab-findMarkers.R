@@ -78,6 +78,35 @@ tabItem(tabName = "findMarkersTab",
                                                              br(),
                                                              withSpinner(dataTableOutput('clusterMarkersAll'))),
                                                       tags$div(class = "clearBoth")
+                                             ),
+                                             tabPanel("Heatmap",
+                                                      column(12,
+                                                             wellPanel(
+                                                               h4("Heatmap:"),
+                                                               # column(4,numericInput("minPctAll", "Min % (min.pct)", value = 0.25)),
+                                                               # column(4,selectInput("testuseAll", "Test to use",
+                                                               #                      choices = c("wilcox","bimod","roc","t","negbinom","poisson","LR","MAST","DESeq2")
+                                                               #                      , selected = "wilcox")),
+                                                               # column(4,numericInput("threshAll", "Logfc Thresh", value = 0.25)),
+                                                               fluidRow(column(4,numericInput("topGenesPerCluster", "# top genes to show per cluster", value = 2)),
+                                                               # column(4, checkboxInput("onlyposAll","Show Only Positive Markers"), value = FALSE),
+                                                               # div(style = "clear:both;"),
+                                                               conditionalPanel("output.clusterMarkersAllAvailable",
+                                                               actionButton("generateHeatmap","Generate Heatmap",class = "button button-3d button-block button-pill button-primary button-large", style = "width: 100%")
+                                                               )
+                                                               )
+                                                             ),
+                                                             conditionalPanel("input.generateHeatmap > 0",
+                                                                              withSpinner(plotOutput('clusterHeatmap',height="1000px"))),
+                                                             conditionalPanel("!output.clusterMarkersAllAvailable",
+                                                                              div(
+                                                                                  p(strong("You need to find all markers first !", class = "alert alert-danger"))
+                                                                              )
+                                                                              
+                                                             )
+                                                             ),
+                                                             br(),
+                                                      tags$div(class = "clearBoth")
                                              )
                                  )
                         )
