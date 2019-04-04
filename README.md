@@ -1,5 +1,10 @@
 # SeuratV3Wizard: R Shiny interface for Seurat single-cell analysis library
 
+## New Features:
+- [Seurat version 3 (alpha)]()
+- [sctransform Option](https://github.com/ChristophH/sctransform)
+- [UCSC Cellbrowser](https://github.com/maximilianh/cellBrowser)
+
 ## Online/Demo:
 You can try it online at http://nasqar.abudhabi.nyu.edu/SeuratV3Wizard
 
@@ -42,10 +47,16 @@ This will run on http://127.0.0.1:5555/
 
 ![alt text](screenshots/screenshot-vln.png "Vln Plots")
 
-![alt text](screenshots/screenshot-tsne.png "Cluster Biomarkers")
+![alt text](screenshots/screenshot-tsne.png "TSNE")
+
+![alt text](screenshots/screenshot-markers.png "Cluster Biomarkers")
 
 ## Acknowledgements:
 
-1) Rahul Satija, Andrew Butler and Paul Hoffman (2017). Seurat: Tools for Single Cell Genomics. R package version 2.2.1\. [https://CRAN.R-project.org/package=Seurat](https://CRAN.R-project.org/package=Seurat)
+- Rahul Satija, Andrew Butler and Paul Hoffman (2017). Seurat: Tools for Single Cell Genomics. R package version 2.2.1\. [https://CRAN.R-project.org/package=Seurat](https://CRAN.R-project.org/package=Seurat)
 
-2) [Satija Lab](http://satijalab.org/seurat/)
+- [Satija Lab](http://satijalab.org/seurat/)
+
+- [Christoph Hafemeister, Rahul Satija (2019). Normalization and variance stabilization of single-cell RNA-seq data using regularized negative binomial regression](https://github.com/ChristophH/sctransform)
+
+- [UCSC Single Cell Browser](https://github.com/maximilianh/cellBrowser)
