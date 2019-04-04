@@ -16,6 +16,7 @@ require(sodium)
 require(ggplot2)
 require(reticulate)
 require(uuid)
+require(sctransform)
 
 ui <- tagList(
   dashboardPage(
@@ -28,16 +29,16 @@ ui <- tagList(
         menuItem("QC & Filter", tabName = "qcFilterTab", icon = icon("th")),
         menuItem("VlnPlot (Filter Cells)", tabName = "vlnplot", icon = icon("bar-chart")),
         menuItem(
-          "Filter & Normalize",
+          "Norm/Detect/Scale",
           tabName = "filterNormSelectTab",
           icon = icon("th")
         ),
-        menuItem(
-          "Dispersion Plot",
-          tabName = "dispersionPlot",
-          icon = icon("bar-chart")
-        ),
-        menuItem("Scale and Run PCA", tabName = "runPcaTab", icon = icon("th")),
+        # menuItem(
+        #   "Dispersion Plot",
+        #   tabName = "dispersionPlot",
+        #   icon = icon("bar-chart")
+        # ),
+        menuItem("PCA Reduction", tabName = "runPcaTab", icon = icon("th")),
         menuItem(
           "Viz PCA Plot",
           tabName = "vizPcaPlot",
@@ -49,11 +50,16 @@ ui <- tagList(
           tabName = "heatmapPlot",
           icon = icon("bar-chart")
         ),
-        menuItem("JackStraw", tabName = "jackStrawPlot", icon = icon("th")),
+        menuItem("Elbow/JackStraw", tabName = "jackStrawPlot", icon = icon("th")),
         menuItem("Cluster Cells", tabName = "clusterCells", icon = icon("th")),
         menuItem(
-          "TSNE (Non-linear)",
+          "Non-linear Reduction",
           tabName = "tsneTab",
+          icon = icon("th")
+        ),
+        menuItem(
+          "Non-linear Reduction",
+          tabName = "umapTab",
           icon = icon("th")
         ),
         menuItem("Cluster Markers", tabName = "findMarkersTab", icon = icon("th")),
@@ -93,6 +99,7 @@ ui <- tagList(
         source("ui-tab-jackStrawPlot.R", local = TRUE)$value,
         source("ui-tab-clusterCells.R", local = TRUE)$value,
         source("ui-tab-tsne.R", local = TRUE)$value,
+        source("ui-tab-umapsc.R", local = TRUE)$value,
         source("ui-tab-finish.R", local = TRUE)$value,
         source("ui-tab-findMarkers.R", local = TRUE)$value,
         source("ui-tab-vizMarkers.R", local = TRUE)$value
@@ -105,12 +112,16 @@ ui <- tagList(
     wellPanel(
     HTML(
       '
-      <p align="center" width="4">Developed and maintained by: Core Bioinformatics, Center for Genomics and Systems Biology, NYU Abu Dhabi</p>
-      <p align="center" width="4">Copyright (C) 2016, code licensed under GPLv3</p>
+      <p align="center" width="4">Core Bioinformatics, Center for Genomics and Systems Biology, NYU Abu Dhabi</p>
+      <p align="center" width="4">Github: <a href="https://github.com/nasqar/SeuratV3Wizard/">https://github.com/nasqar/SeuratV3Wizard/</a></p>
+      <p align="center" width="4">Maintained by: <a href="ay21@nyu.edu">Ayman Yousif</a> </p>
       <p align="center" width="4">Using Seurat version 3.0-alpha </p>
       <p align="center" width="4"><strong>Acknowledgements: </strong></p>
       <p align="center" width="4">1) Rahul Satija, Andrew Butler and Paul Hoffman (2017). Seurat: Tools for Single Cell Genomics. <a href="https://CRAN.R-project.org/package=Seurat" target="_blank">https://CRAN.R-project.org/package=Seurat</a></p>
-      <p align="center" width="4">2) <a href="http://satijalab.org/seurat/" target="_blank">Satija Lab</a></p>'
+      <p align="center" width="4">2) <a href="http://satijalab.org/seurat/" target="_blank">Satija Lab</a></p>
+      <p align="center" width="4">3) <a href="https://github.com/ChristophH/sctransform" target="_blank">Christoph Hafemeister, Rahul Satija (2019). Normalization and variance stabilization of single-cell RNA-seq data using regularized negative binomial regression</a></p>
+      <p align="center" width="4">2) <a href="https://github.com/maximilianh/cellBrowser" target="_blank">UCSC Single Cell Browser</a></p>
+      <p align="center" width="4">Copyright (C) 2019, code licensed under GPLv3</p>'
   )
   ),
   tags$script(src = "imgModal.js")

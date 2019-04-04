@@ -1,21 +1,21 @@
 
 observe({
 
-  if(!is.null(tsneReactive()))
+  if(!is.null(myValues$finalData$pbmc))
   {
-    pbmc = tsneReactive()$pbmc
+    pbmc = myValues$finalData$pbmc
     updateSelectizeInput(session,'clusterNum',
-                         choices=levels(pbmc), selected=NULL)
+                         choices=levels(pbmc), selected = input$clusterNum)
     updateSelectizeInput(session,'clusterNumVS1',
-                         choices=levels(pbmc), selected=NULL)
+                         choices=levels(pbmc), selected = input$clusterNumVS1)
     updateSelectizeInput(session,'clusterNumVS2',
-                         choices=levels(pbmc), selected=NULL)
+                         choices=levels(pbmc),selected = input$clusterNumVS2)
 
     updateSelectizeInput(session,'genesToPlotVln',
-                         choices=myValues$clusterGenes, selected=NULL)
+                         choices=myValues$clusterGenes)
 
     updateSelectizeInput(session,'genesToFeaturePlot',
-                         choices=myValues$clusterGenes, selected=NULL)
+                         choices=myValues$clusterGenes)
   }
 
 })
@@ -27,7 +27,7 @@ observe({
 
 findClusterMarkersReactive <- eventReactive(input$findClusterMarkers, {
   withProgress(message = "Processing , please wait",{
-    pbmc = tsneReactive()$pbmc
+    pbmc = myValues$finalData$pbmc
     js$addStatusIcon("findMarkersTab","loading")
 
     shiny::setProgress(value = 0.4, detail = "Finding cluster markers ...")
@@ -83,7 +83,7 @@ observe({
 
 findClusterMarkersVSReactive <- eventReactive(input$findClusterMarkersVS, {
   withProgress(message = "Processing , please wait",{
-    pbmc = tsneReactive()$pbmc
+    pbmc = myValues$finalData$pbmc
 
     js$addStatusIcon("findMarkersTab","loading")
 
@@ -138,8 +138,10 @@ observe({
 
 findClusterMarkersAllReactive <- eventReactive(input$findClusterMarkersAll, {
   withProgress(message = "Processing , please wait",{
-    pbmc = tsneReactive()$pbmc
+    pbmc = myValues$finalData$pbmc
 
+    myValues$cellBrowserLinkExists = F
+    
     js$addStatusIcon("findMarkersTab","loading")
 
     shiny::setProgress(value = 0.4, detail = "Finding cluster markers ...")
@@ -147,16 +149,24 @@ findClusterMarkersAllReactive <- eventReactive(input$findClusterMarkersAll, {
     cluster.markers <- FindAllMarkers(object = pbmc, min.pctvs = input$minPctAll, test.use = input$testuseAll, only.pos = input$onlyposAll, logfc.threshold = input$threshAll)
 
     if(input$numGenesPerCluster > 0)
+    {
       cluster.markers = cluster.markers %>% group_by(cluster) %>% top_n(input$numGenesPerCluster, avg_logFC)
+      
+      cluster.markers = as.data.frame(cluster.markers)
+      #rownames(cluster.markers) = make.names(cluster.markers$gene, unique = T)
+    }
+      
 
+    
+    
+    myValues$clusterGenes = cluster.markers$gene
 
-    if(is.null(myValues$clusterGenes))
-      myValues$clusterGenes = rownames(cluster.markers)
-    else
-      myValues$clusterGenes = c(myValues$clusterGenes, rownames(cluster.markers) )
-
-    myValues$clusterGenes = unique(myValues$clusterGenes)
-
+    folderuuid = UUIDgenerate()
+    
+    myValues$clusterFilePath = paste0(tempdir(),"/allclustermarkers-",folderuuid,".csv")
+    
+    write.csv(cluster.markers, myValues$clusterFilePath, row.names= T)
+    
     shiny::setProgress(value = 0.8, detail = "Done.")
     js$addStatusIcon("findMarkersTab","done")
 
@@ -191,7 +201,7 @@ output$clusterHeatmap <- renderPlot({
   {
   withProgress(message = "Processing , please wait",{
     
-    pbmc = tsneReactive()$pbmc
+    pbmc = myValues$finalData$pbmc
     
     isolate({
       allmarkers = findClusterMarkersAllReactive()$clustermarkers
@@ -214,7 +224,7 @@ output$VlnMarkersPlot = renderPlot({
       need(length(input$genesToPlotVln) > 0, message = "Select atleast one gene")
     )
 
-    pbmc = tsneReactive()$pbmc
+    pbmc = myValues$finalData$pbmc
 
     VlnPlot(object = pbmc, features = input$genesToPlotVln, log = input$ylog)
   })
@@ -231,9 +241,73 @@ output$FeatureMarkersPlot = renderPlot({
       need(length(input$genesToFeaturePlot) > 0, message = "Select atleast one gene")
     )
 
-    pbmc = tsneReactive()$pbmc
+    pbmc = myValues$finalData$pbmc
 
-    FeaturePlot(object = pbmc, features = input$genesToFeaturePlot, cols = c("gray88", "blue"),reduction = input$reducUseFeature, pt.size = 2)
+    if(input$sctransformOption == 'defaultPath')
+      FeaturePlot(object = pbmc, features = input$genesToFeaturePlot, cols = c("gray88", "blue"),reduction = input$reducUseFeature, pt.size = 2)
+    else
+      FeaturePlot(object = pbmc, features = input$genesToFeaturePlot, cols = c("gray88", "blue"), pt.size = 2)
   })
 
+})
+
+observe({
+  if(input$viewCellBrowser > 0)
+  {
+    withProgress(message = "Generating UCSC Cell Browser data",{
+      
+      shiny::setProgress(value = 0.4, detail = "this might take long for big datasets ...")
+      
+      folderuuid = UUIDgenerate()
+      
+      folderpath = paste0(tempdir(),"/pbmcellbrowser-",folderuuid)
+      foldercbpath = paste0(getwd(),"/www/pbmcellbrowsercb-",folderuuid)
+      
+      tryCatch({
+        js$addStatusIcon("findMarkersTab","loading")
+        isolate({
+          pbmc = myValues$finalData$pbmc
+        })
+        
+        if(input$sctransformOption == 'defaultPath')
+        {
+          ExportToCellbrowser(pbmc, dir= folderpath, cb.dir=foldercbpath, markers.file = myValues$clusterFilePath)
+        }
+        else
+        {
+          ExportToCellbrowser(pbmc, dir= folderpath, cb.dir=foldercbpath, reductions = "umap", markers.file = myValues$clusterFilePath)
+        }
+        js$addStatusIcon("findMarkersTab","done")
+        
+        myValues$wwwcbpath = paste0(session$clientData$url_pathname,"pbmcellbrowsercb-",folderuuid,"/index.html?ds=",pbmc@project.name)
+        
+      }, error = function(e) {
+        print(e)
+      })
+      
+      
+      myValues$cellBrowserLinkExists = T
+      
+      
+    })
+  }
+})
+
+output$cellBrowserLinkExists <-
+  reactive({
+    if(!is.null(myValues$cellBrowserLinkExists))
+      return(myValues$cellBrowserLinkExists)
+    
+    FALSE
+  })
+outputOptions(output, 'cellBrowserLinkExists', suspendWhenHidden=FALSE)
+
+
+
+
+output$cellbrowserlink <- renderUI({
+  column(12,
+         hr(),
+         a('Launch Cellbrowser ',href = myValues$wwwcbpath, target = "_blank", class = "btn button button-3d button-pill button-action")
+  )
 })

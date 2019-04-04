@@ -12,6 +12,57 @@ tabItem(tabName = "findMarkersTab",
                                  p("The min.pct argument requires a gene to be detected at a minimum percentage in either of the two groups of cells, and the thresh.test argument requires a gene to be differentially expressed (on average) by some amount between the two groups. You can set both of these to 0, but with a dramatic increase in time - since this will test a large number of genes that are unlikely to be highly discriminatory. As another option to speed up these computations, max.cells.per.ident can be set. This will downsample each identity class to have no more cells than whatever this is set to. While there is generally going to be a loss in power, the speed increases can be significiant and the most highly differentially expressed genes will likely still rise to the top."),
 
                                  tabsetPanel(type = "tabs",
+                                             tabPanel("Find all markers",
+                                                      column(12,
+                                                             column(8,
+                                                                    wellPanel(
+                                                                      h4("Find All Markers:"),
+                                                                      column(4,numericInput("minPctAll", "Min % (min.pct)", value = 0.25)),
+                                                                      column(4,selectInput("testuseAll", "Test to use",
+                                                                                           choices = c("wilcox","bimod","roc","t","negbinom","poisson","LR","MAST","DESeq2")
+                                                                                           , selected = "wilcox")),
+                                                                      column(4,numericInput("threshAll", "Logfc Thresh", value = 0.25)),
+                                                                      column(8,numericInput("numGenesPerCluster", "# top genes to show per cluster (0 to show all)", value = 0)),
+                                                                      column(4, checkboxInput("onlyposAll","Show Only Positive Markers"), value = FALSE),
+                                                                      div(style = "clear:both;"),
+                                                                      actionButton("findClusterMarkersAll","Find Cluster Markers",class = "button button-3d button-block button-pill button-primary button-large", style = "width: 100%")
+                                                                    )
+                                                             )
+                                                             ,
+                                                             column(4,
+                                                                    box(title = "UCSC Cell Browser (Optional)", solidHeader = T, status = "primary", width = 12,
+                                                                        p("Use this cell browser to explore data visually:"),
+                                                                        p("1) Generate the cell browser data"),
+                                                                        p("2) Launch the browser in a new tab once data is generated"),
+                                                                        p( 
+                                                                          column(12,
+                                                                                 conditionalPanel("output.clusterMarkersAllAvailable",
+                                                                                                  actionButton('viewCellBrowser', 'Generate Cell Browser data', class = "button button-3d button-pill button-highlight")
+                                                                                 ),
+                                                                                 conditionalPanel("!output.clusterMarkersAllAvailable",
+                                                                                                  p(strong("You need to find all markers first !", class = "dangerColor"))
+                                                                                 )
+                                                                                 
+                                                                          ),
+                                                                          conditionalPanel(
+                                                                            "output.cellBrowserLinkExists",
+                                                                            
+                                                                            uiOutput("cellbrowserlink")
+                                                                            
+                                                                          )
+                                                                          
+                                                                        )
+                                                                    )
+                                                             ),
+                                                             tags$div(class = "clearBoth"),
+                                                             conditionalPanel("output.clusterMarkersAllAvailable",
+                                                                              downloadButton('downloadClusterMarkersAllCSV','Save Results as CSV File', class = "btn btn-primary")
+                                                                              
+                                                             ),
+                                                             br(),
+                                                             withSpinner(dataTableOutput('clusterMarkersAll'))),
+                                                      tags$div(class = "clearBoth")
+                                             ),
                                              tabPanel("Find markers by cluster",
 
                                                       column(12,
@@ -42,7 +93,7 @@ tabItem(tabName = "findMarkersTab",
                                                                column(3,selectInput("clusterNumVS1", "Cluster Num (ident.1)",
                                                                                     choices = c(1,2,3,4), selected = 1)),
                                                                column(3,selectInput("clusterNumVS2", "Cluster Num (ident.2)",
-                                                                                    choices = c(1,2,3,4), selected = NULL, multiple = TRUE)),
+                                                                                    choices = c(1,2,3,4), selected = NULL, multiple = F)),
                                                                column(3,numericInput("minPctvs", "Min % (min.pct)", value = 0.25)),
                                                                column(3,selectInput("testuseVS", "Test to use",
                                                                                     choices = c("wilcox","bimod","roc","t","negbinom","poisson","LR","MAST","DESeq2")
@@ -58,27 +109,6 @@ tabItem(tabName = "findMarkersTab",
                                                              withSpinner(dataTableOutput('clusterMarkersVS'))),
                                                       tags$div(class = "clearBoth")
                                              ),
-                                             tabPanel("Find all markers",
-                                                      column(12,
-                                                             wellPanel(
-                                                               h4("Find All Markers:"),
-                                                               column(4,numericInput("minPctAll", "Min % (min.pct)", value = 0.25)),
-                                                               column(4,selectInput("testuseAll", "Test to use",
-                                                                                    choices = c("wilcox","bimod","roc","t","negbinom","poisson","LR","MAST","DESeq2")
-                                                                                    , selected = "wilcox")),
-                                                               column(4,numericInput("threshAll", "Logfc Thresh", value = 0.25)),
-                                                               column(8,numericInput("numGenesPerCluster", "# top genes to show per cluster (0 to show all)", value = 0)),
-                                                               column(4, checkboxInput("onlyposAll","Show Only Positive Markers"), value = FALSE),
-                                                               div(style = "clear:both;"),
-                                                               actionButton("findClusterMarkersAll","Find Cluster Markers",class = "button button-3d button-block button-pill button-primary button-large", style = "width: 100%")
-                                                             ),
-                                                             conditionalPanel("output.clusterMarkersAllAvailable",
-                                                                              downloadButton('downloadClusterMarkersAllCSV','Save Results as CSV File', class = "btn btn-primary")
-                                                             ),
-                                                             br(),
-                                                             withSpinner(dataTableOutput('clusterMarkersAll'))),
-                                                      tags$div(class = "clearBoth")
-                                             ),
                                              tabPanel("Heatmap",
                                                       column(12,
                                                              wellPanel(
@@ -92,7 +122,7 @@ tabItem(tabName = "findMarkersTab",
                                                                # column(4, checkboxInput("onlyposAll","Show Only Positive Markers"), value = FALSE),
                                                                # div(style = "clear:both;"),
                                                                conditionalPanel("output.clusterMarkersAllAvailable",
-                                                               actionButton("generateHeatmap","Generate Heatmap",class = "button button-3d button-block button-pill button-primary button-large", style = "width: 100%")
+                                                                actionButton("generateHeatmap","Generate Heatmap",class = "button button-3d button-block button-pill button-primary button-large", style = "width: 100%")
                                                                )
                                                                )
                                                              ),
@@ -100,7 +130,7 @@ tabItem(tabName = "findMarkersTab",
                                                                               withSpinner(plotOutput('clusterHeatmap',height="1000px"))),
                                                              conditionalPanel("!output.clusterMarkersAllAvailable",
                                                                               div(
-                                                                                  p(strong("You need to find all markers first !", class = "alert alert-danger"))
+                                                                                  p(strong("You need to find all markers first !", class = "dangerColor"))
                                                                               )
                                                                               
                                                              )

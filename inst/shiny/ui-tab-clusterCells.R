@@ -37,7 +37,7 @@ tabItem(tabName = "clusterCells",
                                                     p(
                                                       actionButton(
                                                         "nextRunTsne",
-                                                        "Next Step: TSNE Reduction (non-linear)",
+                                                        "Next Step:  Non-linear Reduction",
                                                         class = "button button-3d button-pill button-caution"
                                                       )
                                                     )

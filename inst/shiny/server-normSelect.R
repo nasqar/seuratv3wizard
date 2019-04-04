@@ -11,6 +11,7 @@ findVariableGenesReactive <-
 
       pbmc <- filterCellsReactive()$pbmc
 
+      disable("sctransformOption")
 
       js$addStatusIcon("filterNormSelectTab","loading")
 
@@ -21,7 +22,7 @@ findVariableGenesReactive <-
                             scale.factor = input$scaleFactor)
 
 
-      shiny::setProgress(value = 0.8, detail = "Finding Variable Genes ...")
+      shiny::setProgress(value = 0.6, detail = "Finding Variable Genes ...")
 
       # pbmc <- FindVariableGenes(object = pbmc, mean.function = ExpMean, dispersion.function = LogVMR,
       #                           x.low.cutoff = input$xlowcutoff, x.high.cutoff = input$xhighcutoff,
@@ -34,22 +35,15 @@ findVariableGenesReactive <-
       print(paste("number of genes found: ", length(x = VariableFeatures(object = pbmc))))
 
 
+      shiny::setProgress(value = 0.8, detail = "Scaling Data (this might take a while)...")
+      
+      #pbmc <- ScaleData(object = pbmc, vars.to.regress = input$varsToRegress, do.par = T)
+      
+      #v3
+      pbmc <- ScaleData(object = pbmc, vars.to.regress = input$varsToRegress)
+      
       shinyjs::show(selector = "a[data-value=\"runPcaTab\"]")
       shinyjs::show(selector = "a[data-value=\"filterNormSelectTab\"]")
-
-
-      varsToRegressSelect = c("nFeature_RNA", "nCount_RNA")
-      if(length(myValues$exprList) > 0)
-        varsToRegressSelect = c(varsToRegressSelect, paste("percent.",names(myValues$exprList), sep = ""))
-
-      if(length(input$filterSpecGenes) > 0)
-        varsToRegressSelect = c(varsToRegressSelect,paste0("percent.",input$customGenesLabel))
-
-      if(length(input$filterPasteGenes) > 0)
-        varsToRegressSelect = c(varsToRegressSelect,paste0("percent.",input$pasteGenesLabel))
-
-      updateSelectizeInput(session,'varsToRegress',
-                           choices=varsToRegressSelect, selected= varsToRegressSelect[varsToRegressSelect != "nFeature_RNA"])
 
       #js$addStatusIcon("dispersionPlot","loading")
       js$addStatusIcon("filterNormSelectTab","done")
@@ -72,6 +66,44 @@ output$varGenesPrint <- renderText({
   paste("Number of variable genes/features found: ", length(x = VariableFeatures(object = pbmc)))
   
 })
+
+
+observe({
+  sctransformReactive()
+})
+
+sctransformReactive <-
+  eventReactive(input$scTransform, {
+    withProgress(message = "Processing , please wait",{
+      
+      
+      pbmc <- filterCellsReactive()$pbmc
+      
+      disable("sctransformOption")
+      
+      js$addStatusIcon("filterNormSelectTab","loading")
+      
+      
+      shiny::setProgress(value = 0.4, detail = "Running SCTransform ...")
+      
+      pbmc <- SCTransform(object = pbmc, verbose = F, vars.to.regress = input$varsToRegressUmap)
+      
+      shinyjs::show(selector = "a[data-value=\"runPcaTab\"]")
+      #shinyjs::show(selector = "a[data-value=\"filterNormSelectTab\"]")
+      
+      js$addStatusIcon("filterNormSelectTab","done")
+      js$addStatusIcon("runPcaTab","next")
+      return(list('pbmc'=pbmc))
+    })}
+  )
+
+output$sctransformReactiveDone <- reactive({
+  if(is.null(sctransformReactive()$pbmc))
+    return(FALSE)
+  return(TRUE)
+})
+outputOptions(output, 'sctransformReactiveDone', suspendWhenHidden=FALSE)
+
 
 observeEvent(input$nextRunPca, {
   GotoTab("runPcaTab")

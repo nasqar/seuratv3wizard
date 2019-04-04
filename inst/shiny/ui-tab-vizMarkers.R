@@ -52,7 +52,7 @@ tabItem(tabName = "vizMarkersTab",
                                                                          'Start typing gene name'
                                                                      )
                                                       ),
-                                                      selectInput("reducUseFeature","Reduction method to use",choices = c("tsne","pca","ica"), selected = "tsne"),
+                                                      selectInput("reducUseFeature","Reduction method to use",choices = c("tsne","pca","ica","umap"), selected = "tsne"),
                                                       actionButton("plotFeatureMarkers","Plot",class = "button button-3d button-block button-pill button-primary", style = "width: 100%")
                                                     )
 
@@ -62,7 +62,8 @@ tabItem(tabName = "vizMarkersTab",
                                                            withSpinner(plotOutput(outputId = "FeatureMarkersPlot"))
                                                     )
                                              )
-                                      ))
+                                      )
+                                      )
                  )
           )
         )

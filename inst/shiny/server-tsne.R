@@ -21,7 +21,6 @@ tsneReactive <-
 
       shiny::setProgress(value = 0.9, detail = "Done.")
 
-
       shinyjs::show(selector = "a[data-value=\"finishTab\"]")
       shinyjs::show(selector = "a[data-value=\"findMarkersTab\"]")
       shinyjs::show(selector = "a[data-value=\"vizMarkersTab\"]")
@@ -32,23 +31,77 @@ tsneReactive <-
       js$addStatusIcon("finishTab","download")
       js$addStatusIcon("findMarkersTab","next")
 
+      myValues$finalData = list('pbmc'=pbmc)
       return(list('pbmc'=pbmc))
     })}
+  )
+
+observe({
+  umapReactive()
+})
+umapReactive <-
+  eventReactive(input$runUmap, {
+      withProgress(message = "Processing , please wait",{
+        print("Umap")
+        
+        js$addStatusIcon("umapTab","loading")
+        
+        pbmc <- clusterCellsReactive()$pbmc
+        
+        shiny::setProgress(value = 0.4, detail = "Running UMAP Reduction ...")
+        
+        #pbmc <- RunTSNE(object = pbmc, dims.use = input$tsnePCDim1:input$tsnePCDim2, perplexity = input$tsnePerplexity, num_threads = parallel::detectCores()/2)
+        
+        # updateSelectizeInput(session,'clusterNumCells',
+        #                      choices=levels(pbmc), selected=NULL)
+        
+        shiny::setProgress(value = 0.9, detail = "Done.")
+        
+        shinyjs::show(selector = "a[data-value=\"finishTab\"]")
+        shinyjs::show(selector = "a[data-value=\"findMarkersTab\"]")
+        shinyjs::show(selector = "a[data-value=\"vizMarkersTab\"]")
+        shinyjs::show(selector = "a[data-value=\"umapTab\"]")
+        
+        
+        js$addStatusIcon("umapTab","done")
+        js$addStatusIcon("finishTab","download")
+        js$addStatusIcon("findMarkersTab","next")
+        
+        myValues$finalData = list('pbmc'=pbmc)
+        
+        return(list('pbmc'=pbmc))
+      })}
   )
 
 
 output$tsnePlot <- renderPlot({
 
   pbmc <- tsneReactive()$pbmc
-
+  
+  DimPlot(object = pbmc, reduction = 'tsne', label = TRUE, group.by = input$tsneGroupBy)
   #TSNEPlot(object = pbmc, do.label = TRUE)
-  DimPlot(object = pbmc, reduction = 'tsne', do.label = TRUE)
+  #DimPlot(object = pbmc, reduction = 'tsne', do.label = TRUE, group.by = input$tsneGroupBy)
 })
 
 output$tsnePlotAvailable <- reactive({
   return(!is.null(tsneReactive()$pbmc))
 })
 outputOptions(output, 'tsnePlotAvailable', suspendWhenHidden=FALSE)
+
+
+output$umapPlot <- renderPlot({
+  
+  pbmc <- umapReactive()$pbmc
+
+  DimPlot(object = pbmc,reduction = 'umap', label = TRUE, group.by = input$umapGroupBy)
+  #TSNEPlot(object = pbmc, do.label = TRUE)
+  #DimPlot(object = pbmc, reduction = 'tsne', do.label = TRUE, group.by = input$tsneGroupBy)
+})
+
+output$umapPlotAvailable <- reactive({
+  return(!is.null(umapReactive()$pbmc))
+})
+outputOptions(output, 'umapPlotAvailable', suspendWhenHidden=FALSE)
 
 ### Cells in Clusters
 output$clustercellsavailable <-
@@ -99,63 +152,15 @@ output$downloadClusterCells <- downloadHandler(
 
 )
 
+
 observe({
-  if(input$viewCellBrowser > 0)
-  {
-    withProgress(message = "Generating UCSC Cell Browser data",{
-      js$addStatusIcon("tsneTab","loading")
-      
-      pbmc = tsneReactive()$pbmc
-      
-      myValues$cellBrowserLinkExists = F
-      
-      shiny::setProgress(value = 0.4, detail = "please wait, this might take longer for big datasets ...")
-      
-      folderuuid = UUIDgenerate()
-      folderpath = paste0(tempdir(),"/pbmcellbrowser-",folderuuid)
-      foldercbpath = paste0(getwd(),"/www/pbmcellbrowsercb-",folderuuid)
-      myValues$wwwcbpath = paste0(session$clientData$url_pathname,"pbmcellbrowsercb-",folderuuid,"/index.html?ds=",pbmc@project.name)
-      
-      tryCatch({
-        ExportToCellbrowser(pbmc, dir= folderpath, cb.dir=foldercbpath)
-      }, error = function(e) {
-        print(e)
-      })
-      
-      
-      myValues$cellBrowserLinkExists = T
-      
-      js$addStatusIcon("tsneTab","done")
-      
-    })
-  }
+  if(input$nextClusterMarkers > 0 || input$nextClusterMarkersUmap > 0)
+    GotoTab("findMarkersTab")
 })
 
-output$cellBrowserLinkExists <-
-  reactive({
-    if(!is.null(myValues$cellBrowserLinkExists) || dir.exists(paste0(getwd(),"/www/pbmcellbrowser")))
-      return(myValues$cellBrowserLinkExists)
-    
-    FALSE
-  })
-outputOptions(output, 'cellBrowserLinkExists', suspendWhenHidden=FALSE)
-
-
-
-
-output$cellbrowserlink <- renderUI({
-  column(12,
-         hr(),
-    a('Launch Cellbrowser ',href = myValues$wwwcbpath, target = "_blank", class = "btn button button-3d button-pill button-action")
-  )
-})
-
-observeEvent(input$nextClusterMarkers, {
-  GotoTab("findMarkersTab")
-})
-
-observeEvent(input$nextDownload, {
-  GotoTab("finishTab")
+observe({
+  if(input$nextDownload > 0 || input$nextDownloadUmap > 0)
+    GotoTab("finishTab")
 })
 
 
