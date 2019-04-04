@@ -29,31 +29,32 @@ tabItem(tabName = "tsneTab",
                                          tabsetPanel(type = "tabs",
                                                      tabPanel("TSNE Plot",
 
-                                                              column(12,
+                                                              column(8,
                                                                      h4(strong("TSNE Plot")),
-                                                                     column(8,
+                                                                     column(12,
                                                                             withSpinner(plotOutput(outputId = "tsnePlot"))
-                                                                            ),
-                                                                     column(4,
-                                                                            box(title = "UCSC Cell Browser (Optional)", solidHeader = T, status = "primary", width = 12,
-                                                                              p("Use this cell browser to explore data visually:"),
-                                                                              p("1) Generate the cell browser data"),
-                                                                              p("2) Launch the browser in a new tab once data is generated"),
-                                                                              p( 
-                                                                                column(12,
-                                                                                       actionButton('viewCellBrowser', 'Generate Cell Browser data', class = "button button-3d button-block button-pill button-highlight")
-                                                                                       ),
-                                                                                conditionalPanel(
-                                                                                  "output.cellBrowserLinkExists",
-                                                                                  
-                                                                                         uiOutput("cellbrowserlink")
-                                                                                         
-                                                                                  )
-                                                                                
-                                                                              )
-                                                                            )
                                                                             )
                                                               ),
+                                                              column(4,
+                                                                     
+                                                                     radioButtons("tsneGroupBy", label = "Color by:",
+                                                                                  choices = list("Clusters" = "ident", "Samples" = "orig.ident"), 
+                                                                                  selected = "ident"),
+                                                                     p(
+                                                                       actionButton(
+                                                                         "nextClusterMarkers",
+                                                                         "Next Step: Find Cluster Markers",
+                                                                         class = "button button-3d button-pill button-caution"
+                                                                       ),
+                                                                       hr(),
+                                                                       actionButton(
+                                                                         "nextDownload",
+                                                                         "Download Seurat Object",
+                                                                         class = "button button-3d button-pill",
+                                                                         icon = icon("download")
+                                                                       )
+                                                                     )
+                                                                     ),
                                                               tags$div(class = "clearBoth")
                                                      ),
                                                      tabPanel("Find Cells in Clusters",
@@ -77,20 +78,7 @@ tabItem(tabName = "tsneTab",
                                          ),
 
 
-                                         hr(),
-                                         p(
-                                           actionButton(
-                                             "nextClusterMarkers",
-                                             "Next Step: Find Cluster Markers",
-                                             class = "button button-3d button-pill button-caution"
-                                           ),
-                                           actionButton(
-                                             "nextDownload",
-                                             "Download Seurat Object",
-                                             class = "button button-3d button-pill",
-                                             icon = icon("download")
-                                           )
-                                         )
+                                         hr()
                                          
                                          
 

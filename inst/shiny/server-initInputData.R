@@ -4,14 +4,16 @@ observe({
   shinyjs::hide(selector = "a[data-value=\"qcFilterTab\"]")
   shinyjs::hide(selector = "a[data-value=\"vlnplot\"]")
   shinyjs::hide(selector = "a[data-value=\"filterNormSelectTab\"]")
-  shinyjs::hide(selector = "a[data-value=\"dispersionPlot\"]")
-  shinyjs::hide(selector = "a[data-value=\"runPcaTab\"]")
+  # shinyjs::hide(selector = "a[data-value=\"dispersionPlot\"]")
+  
   shinyjs::hide(selector = "a[data-value=\"vizPcaPlot\"]")
   shinyjs::hide(selector = "a[data-value=\"pcaPlot\"]")
   shinyjs::hide(selector = "a[data-value=\"heatmapPlot\"]")
+  shinyjs::hide(selector = "a[data-value=\"runPcaTab\"]")
   shinyjs::hide(selector = "a[data-value=\"jackStrawPlot\"]")
   shinyjs::hide(selector = "a[data-value=\"clusterCells\"]")
   shinyjs::hide(selector = "a[data-value=\"tsneTab\"]")
+  shinyjs::hide(selector = "a[data-value=\"umapTab\"]")
   shinyjs::hide(selector = "a[data-value=\"finishTab\"]")
   shinyjs::hide(selector = "a[data-value=\"findMarkersTab\"]")
   shinyjs::hide(selector = "a[data-value=\"vizMarkersTab\"]")
@@ -204,6 +206,7 @@ initSeuratObjReactive <-
 
                     shiny::setProgress(value = 0.8, detail = "Done.")
                     js$addStatusIcon("datainput","done")
+                    js$addStatusIcon("qcFilterTab","next")
                     shinyjs::show(selector = "a[data-value=\"qcFilterTab\"]")
                     shinyjs::runjs("window.scrollTo(0, 0)")
 

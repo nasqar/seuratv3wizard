@@ -156,6 +156,22 @@ filterCellsReactive <-
       }
       
       
+      varsToRegressSelect = c("nFeature_RNA", "nCount_RNA")
+      if(length(myValues$exprList) > 0)
+        varsToRegressSelect = c(varsToRegressSelect, paste("percent.",names(myValues$exprList), sep = ""))
+      
+      if(length(input$filterSpecGenes) > 0)
+        varsToRegressSelect = c(varsToRegressSelect,paste0("percent.",input$customGenesLabel))
+      
+      if(length(input$filterPasteGenes) > 0)
+        varsToRegressSelect = c(varsToRegressSelect,paste0("percent.",input$pasteGenesLabel))
+      
+      updateSelectizeInput(session,'varsToRegress',
+                           choices=varsToRegressSelect, selected= varsToRegressSelect[varsToRegressSelect != "nFeature_RNA"])
+      updateSelectizeInput(session,'varsToRegressUmap',
+                           choices=varsToRegressSelect, selected= NULL)
+      
+      
       shiny::setProgress(value = 0.9, detail = "Done.")
 
 

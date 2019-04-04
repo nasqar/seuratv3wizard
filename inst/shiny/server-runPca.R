@@ -7,21 +7,15 @@ runPcaReactive <-
     withProgress(message = "Processing , please wait",{
       print("Running PCA")
 
-      pbmc <- findVariableGenesReactive()$pbmc
+      if(input$sctransformOption == 'defaultPath')
+        pbmc <- findVariableGenesReactive()$pbmc
+      else
+        pbmc <- sctransformReactive()$pbmc
 
       js$addStatusIcon("runPcaTab","loading")
 
-      shiny::setProgress(value = 0.3, detail = "Scaling Data (this might take a while)...")
+      shiny::setProgress(value = 0.4, detail = "Performing PCA ...")
 
-      #pbmc <- ScaleData(object = pbmc, vars.to.regress = input$varsToRegress, do.par = T)
-      
-      #v3
-      pbmc <- ScaleData(object = pbmc, vars.to.regress = input$varsToRegress)
-
-      shiny::setProgress(value = 0.6, detail = "Performing PCA ...")
-
-      
-      
       pbmc <- RunPCA(object = pbmc, features = VariableFeatures(object = pbmc), verbose = FALSE)
 
       shinyjs::show(selector = "a[data-value=\"vizPcaPlot\"]")
@@ -36,6 +30,8 @@ runPcaReactive <-
       js$addStatusIcon("heatmapPlot","graph")
       js$addStatusIcon("jackStrawPlot","next")
 
+      numCellsToUse = ifelse(ncol(x = pbmc) > 500, 500, ncol(x = pbmc))
+      updateNumericInput(session, "cellsToUse", value = numCellsToUse)
       updateTabItems(session, "tabs", "runPcaTab")
 
       return(list('pbmc'=pbmc))
