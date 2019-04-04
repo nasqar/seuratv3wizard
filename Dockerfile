@@ -24,9 +24,12 @@ RUN wget --no-verbose https://s3.amazonaws.com/rstudio-shiny-server-os-build/ubu
 
 # seuratwizard
 RUN R -e "install.packages('devtools')"
-RUN apt-get update && apt-get install -y libhdf5-dev
+RUN apt-get update && apt-get install -y libhdf5-dev libpython-dev python-pip
 RUN R -e "devtools::install_github('nasqar/seuratv3wizard', upgrade_dependencies = FALSE,subdir = NULL)"
 RUN R -e "devtools::install_github(repo = 'satijalab/seurat', ref = 'release/3.0', force=T)"
+RUN R -e "devtools::install_github(repo = 'ChristophH/sctransform')"
+RUN pip install cellbrowser
+RUN pip install umap-learn
 
 # Copy configuration files into the Docker image
 COPY docker_files/shiny-server.conf  /etc/shiny-server/shiny-server.conf
