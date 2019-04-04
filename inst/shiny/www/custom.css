@@ -104,3 +104,12 @@ body {
 a > .highlight { background-color:#fdfdfd;}
 
 .modal-dialog { width: 50%;}
+
+.dangerColor {
+  background-color: #f5705f!important;
+  color:white;
+}
+
+.content-wrapper, .right-side {
+  background-color: #f3faff !important
+  }
