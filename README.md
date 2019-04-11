@@ -9,7 +9,7 @@
 You can try it online at http://nasqar.abudhabi.nyu.edu/SeuratV3Wizard
 
 ## Local Install:
-
+Make sure to have devtools installed first
 ```
 devtools::install_github(repo = 'satijalab/seurat', ref = 'release/3.0')
 devtools::install_github("nasqar/seuratv3wizard")
@@ -24,13 +24,6 @@ library(SeuratV3Wizard)
 SeuratV3Wizard()
 ```
 This will run on http://0.0.0.0:1234/ by default
-
-## Run using docker:
-
-```
-docker run -p 80:80 aymanm/seuratv3wizard
-```
-This will run on port 80
 ***
 
 To run on specific ip/port:
@@ -41,6 +34,19 @@ portNumber = 5555
 SeuratV3Wizard(ip,portNumber)
 ```
 This will run on http://127.0.0.1:5555/
+
+## Run using docker:
+
+```
+docker run -p 80:80 aymanm/seuratv3wizard
+```
+This will run on port 80
+
+To run on a different port:
+```
+docker run -p 8083:80 aymanm/seuratv3wizard
+```
+This will run on port 8083
 
 ## Screenshots:
 ![alt text](screenshots/screenshot-input.png "Input Data")
