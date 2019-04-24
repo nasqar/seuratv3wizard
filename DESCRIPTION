@@ -1,8 +1,8 @@
 Package: SeuratV3Wizard
 Title: User Interface to Seurat (Single Cell) library in R Shiny
-Version: 2.0.0.0000
+Version: 3.0.0.0000
 Authors@R: person("Ayman", "Yousif", email = "ay21@nyu.edu", role = c("aut", "cre"))
-Description: User Interface to Seurat (Single Cell) in R Shiny
+Description: User Interface to Seurat v3 (Single Cell) in R Shiny
 Depends: R (>= 3.4)
 License: What license is it under?
 Encoding: UTF-8
@@ -14,6 +14,7 @@ Imports:
 	shinycssloaders (>= 0.2.0),
 	DT (>= 0.2),
 	shiny (>= 1.0.5),
+	Seurat (== 3.0.0),
 	dplyr,
 	Matrix,
 	V8,
