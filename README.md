@@ -5,8 +5,21 @@
 - [sctransform Option](https://github.com/ChristophH/sctransform)
 - [UCSC Cellbrowser](https://github.com/maximilianh/cellBrowser)
 
-## Online/Demo:
+## Online/Live instance:
 You can try it online at http://nasqar.abudhabi.nyu.edu/SeuratV3Wizard
+
+## Run using docker (Recommended):
+Make sure Docker (version >= 17.03.0-ce) is installed.
+```
+docker run -p 80:80 aymanm/seuratv3wizard
+```
+This will run on port 80
+
+To run on a different port:
+```
+docker run -p 8083:80 aymanm/seuratv3wizard
+```
+This will run on port 8083
 
 ## Local Install:
 Make sure to have devtools installed first
@@ -34,19 +47,6 @@ portNumber = 5555
 SeuratV3Wizard(ip,portNumber)
 ```
 This will run on http://127.0.0.1:5555/
-
-## Run using docker:
-
-```
-docker run -p 80:80 aymanm/seuratv3wizard
-```
-This will run on port 80
-
-To run on a different port:
-```
-docker run -p 8083:80 aymanm/seuratv3wizard
-```
-This will run on port 8083
 
 ## Screenshots:
 ![alt text](screenshots/screenshot-input.png "Input Data")
