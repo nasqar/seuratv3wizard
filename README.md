@@ -1,7 +1,7 @@
 # SeuratV3Wizard: R Shiny interface for Seurat single-cell analysis library
 
 ## New Features:
-- [Seurat version 3 (alpha)]()
+- [Seurat v3](https://github.com/satijalab/seurat)
 - [sctransform Option](https://github.com/ChristophH/sctransform)
 - [UCSC Cellbrowser](https://github.com/maximilianh/cellBrowser)
 
