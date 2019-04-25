@@ -37,8 +37,8 @@ clusterCellsReactive <-
       
       updateNumericInput(session, "tsnePCDim1", value = input$clustPCDim1)
       updateNumericInput(session, "tsnePCDim2", value = input$clustPCDim2)
-      updateNumericInput(session, "umapPCDim1", value = input$clustPCDim1)
-      updateNumericInput(session, "umapPCDim2", value = input$clustPCDim2)
+      # updateNumericInput(session, "umapPCDim1", value = input$clustPCDim1)
+      # updateNumericInput(session, "umapPCDim2", value = input$clustPCDim2)
       
       shinyjs::show(selector = "a[data-value=\"clusterCells\"]")
 

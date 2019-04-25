@@ -14,8 +14,8 @@ tabItem(tabName = "umapTab",
                                  p("This uses SCTransform, an R package for normalization and variance stabilization of single-cell RNA-seq data using regularized negative binomial regression"),
                                  p("Uniform Manifold Approximation and Projection (UMAP) is a dimension reduction technique that can be used for visualisation similarly to t-SNE, but also for general non-linear dimension reduction. "),
 
-                                 column(6,numericInput("umapPCDim1", "Dimensions(PC) To Use (1):", value = 1)),
-                                 column(6,numericInput("umapPCDim2", "Dimensions(PC) To Use (2):", value = 10)),
+                                 # column(6,numericInput("umapPCDim1", "Dimensions(PC) To Use (1):", value = 1)),
+                                 # column(6,numericInput("umapPCDim2", "Dimensions(PC) To Use (2):", value = 10)),
 
                                  p("Once running the reduction is complete, you can also view/download cells in each cluster"),
                                  tags$div(class = "clearBoth")
