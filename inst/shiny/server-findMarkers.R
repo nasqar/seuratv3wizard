@@ -3,7 +3,6 @@ observe({
 
   if(!is.null(myValues$finalData$pbmc))
   {
-    pbmc = myValues$finalData$pbmc
     updateSelectizeInput(session,'clusterNum',
                          choices=levels(pbmc), selected = input$clusterNum)
     updateSelectizeInput(session,'clusterNumVS1',

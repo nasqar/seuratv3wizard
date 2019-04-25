@@ -9,7 +9,7 @@ observe({
 
       js$addStatusIcon("finishTab","loading")
 
-      pbmc <- tsneReactive()$pbmc
+      pbmc <- myValues$finalData$pbmc
       filename = paste0(input$projectname,"_seuratObj_",session$token,"_", format(Sys.time(), "%y-%m-%d_%H-%M-%S"), '.rds')
 
       filepath = file.path(tempdir(), filename)
