@@ -25,7 +25,7 @@ RUN wget --no-verbose https://s3.amazonaws.com/rstudio-shiny-server-os-build/ubu
 # seuratwizard
 RUN apt-get update && apt-get install -y libhdf5-dev libpython-dev python-pip
 RUN R -e "install.packages(c('glue','devtools'))"
-RUN R -e "devtools::install_github('nasqar/seuratv3wizard', upgrade_dependencies = FALSE,ref = 'fixfornasqar',subdir=NULL)"
+RUN R -e "devtools::install_github('nasqar/seuratv3wizard', upgrade_dependencies = FALSE)"
 RUN pip install cellbrowser
 RUN pip install umap-learn
 
