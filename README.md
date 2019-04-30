@@ -24,12 +24,13 @@ This will run on port 8083
 ## Local Install:
 Make sure to have devtools installed first
 ```
-devtools::install_github(repo = 'satijalab/seurat', ref = 'release/3.0')
 devtools::install_github("nasqar/seuratv3wizard")
 ```
 
-Optional: For ucsc cellbrowser support, make sure to follow the installation instructions [here](https://cellbrowser.readthedocs.io)
-
+Optional: For ucsc cellbrowser support, make sure to follow the installation instructions [here](https://cellbrowser.readthedocs.io). For linux-based OS, type the following in the terminal:
+```
+sudo pip install cellbrowser=0.5.6
+```
 ## Run:
 
 ```
