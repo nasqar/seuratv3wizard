@@ -60,6 +60,10 @@ This will run on http://127.0.0.1:5555/
 
 ## Acknowledgements:
 
-- [GuangchuangYu/clusterProfiler](https://github.com/GuangchuangYu/clusterProfiler)
+- Rahul Satija, Andrew Butler and Paul Hoffman (2017). Seurat: Tools for Single Cell Genomics. R package version 2.2.1\. [https://CRAN.R-project.org/package=Seurat](https://CRAN.R-project.org/package=Seurat)
 
-- [Mohammed Khalfan](https://gencore.bio.nyu.edu/)
+- [Satija Lab](http://satijalab.org/seurat/)
+
+- [Christoph Hafemeister, Rahul Satija (2019). Normalization and variance stabilization of single-cell RNA-seq data using regularized negative binomial regression](https://github.com/ChristophH/sctransform)
+
+- [UCSC Single Cell Browser](https://github.com/maximilianh/cellBrowser)
