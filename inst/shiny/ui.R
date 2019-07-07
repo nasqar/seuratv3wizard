@@ -4,9 +4,9 @@ require(shinyBS)
 require(shinycssloaders)
 require(DT)
 require(shiny)
-require(Seurat)
+#require(Seurat)
 #v3
-#require(Seurat, lib.loc="./SeuratLib")
+require(Seurat, lib.loc="./SeuratLib")
 
 
 require(dplyr)
