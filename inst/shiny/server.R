@@ -1,7 +1,9 @@
 
 #max upload 300mb
 options(shiny.maxRequestSize = 300*1024^2)
-
+options(future.globals.maxSize = 10 * 1024 ^ 3)
+library(future)
+plan("multiprocess", workers = 10)
 
 server <- function(input, output, session) {
 
@@ -23,7 +25,8 @@ server <- function(input, output, session) {
 
   source("server-clusterCells.R",local = TRUE)
 
-  source("server-tsne.R",local = TRUE)
+  #source("server-tsne.R",local = TRUE)
+  source("server-nonLinReduction.R", local = TRUE)
 
   source("server-download.R",local = TRUE)
 
