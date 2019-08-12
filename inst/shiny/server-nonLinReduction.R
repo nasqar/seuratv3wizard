@@ -5,65 +5,61 @@ observe({
 
 tsneReactive <-
   eventReactive(input$runTSNE, {
-    withProgress(message = "Processing , please wait",{
-      print("Running TSNE")
-
-      js$addStatusIcon("tsneTab","loading")
-
-      pbmc <- clusterCellsReactive()$pbmc
-
-      shiny::setProgress(value = 0.4, detail = "Running TSNE Reduction ...")
-
-      pbmc <- RunTSNE(object = pbmc, dims.use = as.numeric(c(input$tsnePCDim)), perplexity = input$tsnePerplexity, num_threads = parallel::detectCores()/2)
-
-      updateSelectizeInput(session,'clusterNumCells',
-                           choices=levels(pbmc), selected=NULL)
-
-      shiny::setProgress(value = 0.9, detail = "Done.")
-
-      shinyjs::show(selector = "a[data-value=\"finishTab\"]")
-      shinyjs::show(selector = "a[data-value=\"findMarkersTab\"]")
-      shinyjs::show(selector = "a[data-value=\"vizMarkersTab\"]")
-      shinyjs::show(selector = "a[data-value=\"tsneTab\"]")
-
-
-      js$addStatusIcon("tsneTab","done")
-      js$addStatusIcon("finishTab","download")
-      js$addStatusIcon("findMarkersTab","next")
-
-      myValues$finalData = list('pbmc'=pbmc)
-      return(list('pbmc'=pbmc))
-    })}
+      withProgress(message = "Processing , please wait",{
+        print("Running TSNE")
+        
+        js$addStatusIcon("nonLinReductTab","loading")
+        
+        pbmc <- clusterCellsReactive()$pbmc
+        
+        shiny::setProgress(value = 0.4, detail = "Running TSNE Reduction ...")
+        
+        pbmc <- RunTSNE(object = pbmc, dims.use = as.numeric(c(input$tsnePCDim)), perplexity = input$tsnePerplexity, num_threads = parallel::detectCores()/2)
+        
+        updateSelectizeInput(session,'clusterNumCells', choices=levels(pbmc), selected=NULL)
+        
+        shiny::setProgress(value = 0.9, detail = "Done.")
+        
+        shinyjs::show(selector = "a[data-value=\"finishTab\"]")
+        shinyjs::show(selector = "a[data-value=\"vizMarkersTab\"]")
+        shinyjs::show(selector = "a[data-value=\"findMarkersTab\"]")
+        shinyjs::show(selector = "a[data-value=\"nonLinReductTab\"]")
+        
+        js$addStatusIcon("nonLinReductTab","done")
+        js$addStatusIcon("finishTab","download")
+        js$addStatusIcon("findMarkersTab","next")
+        
+        myValues$finalData = list('pbmc'=pbmc)
+        return(list('pbmc'=pbmc))
+      })}
   )
 
 observe({
   umapReactive()
 })
+
 umapReactive <-
-  eventReactive(input$runUmap, {
+  eventReactive({
+    input$runUmap
+    input$nextRunTsne
+  }, {
       withProgress(message = "Processing , please wait",{
         print("Umap")
         
-        js$addStatusIcon("umapTab","loading")
+        js$addStatusIcon("nonLinReductTab","loading")
         
         pbmc <- clusterCellsReactive()$pbmc
         
         shiny::setProgress(value = 0.4, detail = "Running UMAP Reduction ...")
         
-        #pbmc <- RunTSNE(object = pbmc, dims.use = input$tsnePCDim1:input$tsnePCDim2, perplexity = input$tsnePerplexity, num_threads = parallel::detectCores()/2)
-        
-        # updateSelectizeInput(session,'clusterNumCells',
-        #                      choices=levels(pbmc), selected=NULL)
-        
         shiny::setProgress(value = 0.9, detail = "Done.")
         
         shinyjs::show(selector = "a[data-value=\"finishTab\"]")
-        shinyjs::show(selector = "a[data-value=\"findMarkersTab\"]")
         shinyjs::show(selector = "a[data-value=\"vizMarkersTab\"]")
-        shinyjs::show(selector = "a[data-value=\"umapTab\"]")
+        shinyjs::show(selector = "a[data-value=\"findMarkersTab\"]")
+        shinyjs::show(selector = "a[data-value=\"nonLinReductTab\"]")
         
-        
-        js$addStatusIcon("umapTab","done")
+        js$addStatusIcon("nonLinReductTab","done")
         js$addStatusIcon("finishTab","download")
         js$addStatusIcon("findMarkersTab","next")
         
@@ -107,7 +103,7 @@ outputOptions(output, 'tsnePlotAvailable', suspendWhenHidden=FALSE)
 UmapPlotFunc = reactive({
   pbmc <- umapReactive()$pbmc
   
-  DimPlot(object = pbmc,reduction = 'umap', label = TRUE, group.by = input$umapGroupBy)
+  DimPlot(object = pbmc,reduction = input$reductionMethod, label = TRUE, group.by = input$umapGroupBy)
   #TSNEPlot(object = pbmc, do.label = TRUE)
   #DimPlot(object = pbmc, reduction = 'tsne', do.label = TRUE, group.by = input$tsneGroupBy)
 })
@@ -132,7 +128,7 @@ output$downloadUmap <- downloadHandler(
 output$umapPlotAvailable <- reactive({
   return(!is.null(umapReactive()$pbmc))
 })
-outputOptions(output, 'umapPlotAvailable', suspendWhenHidden=FALSE)
+#outputOptions(output, 'umapPlotAvailable', suspendWhenHidden=FALSE)
 
 ### Cells in Clusters
 output$clustercellsavailable <-
@@ -141,46 +137,44 @@ output$clustercellsavailable <-
   })
 outputOptions(output, 'clustercellsavailable', suspendWhenHidden=FALSE)
 
+
 observe({
   cellsInClusterReactive()
 })
 
-cellsInClusterReactive <- eventReactive(input$findCellsInCluster, {
 
+cellsInClusterReactive <- eventReactive(input$findCellsInCluster, {
   pbmc <- tsneReactive()$pbmc
   cellsInCluster <- WhichCells(object = pbmc, ident = input$clusterNumCells)
 
-
   print(length(cellsInCluster))
-
+  
   ### Format the output to fit in a table
   extLength = round(length(cellsInCluster)/5)*5
   length(cellsInCluster) = extLength
   cellsInCluster = matrix(cellsInCluster,extLength/5,5)
   colnames(cellsInCluster) = c(" "," "," "," "," ")
   cellsInCluster[is.na(cellsInCluster)] = ""
-
+  
   return(list("clustername" = paste0("cellsClusterId",input$clusterNumCells),"cellsInCluster"=cellsInCluster))
 })
 
 output$cellsInClusters <- renderDataTable({
   tmp <- cellsInClusterReactive()
-
+  
   if(!is.null(tmp)){
     datatable(as.matrix(tmp$cellsInCluster),options = list(ordering=F))
   }
-
+  
 })
 
 output$downloadClusterCells <- downloadHandler(
-
   filename = function() {paste0(cellsInClusterReactive()$clustername,".csv")},
   content = function(file) {
     csv = tail(cellsInClusterReactive()$cellsInCluster,-1)
-
+    
     write.csv(csv, file, row.names=F)
-    }
-
+  }
 )
 
 

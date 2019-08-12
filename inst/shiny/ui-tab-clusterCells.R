@@ -26,8 +26,7 @@ tabItem(tabName = "clusterCells",
                                           column(6,numericInput("clustResolution", "Resolution (Granularity)", value = 0.6))
                                           ),
                                    column(12,
-                                          column(6,numericInput("clustPCDim1", "Dimensions(PC) To Use (1):", value = 1)),
-                                          column(6,numericInput("clustPCDim2", "Dimensions(PC) To Use (2):", value = 10))
+                                          column(6,selectizeInput("clustPCDim", "Choose Dimensions(PC) To Use", multiple = TRUE, choices = c(1:20),selected = c(1,2,3,4,5)))
                                           ),
                                    conditionalPanel("output.clustParamsAvailable",
                                                     h4(strong("Clustering Algorithm Output:")

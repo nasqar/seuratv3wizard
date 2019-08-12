@@ -17,6 +17,7 @@ require(ggplot2)
 require(reticulate)
 require(uuid)
 require(sctransform)
+reticulate::use_python("/home/shiny/miniconda3/bin/python", required= TRUE)
 
 ui <- tagList(
   dashboardPage(
@@ -54,14 +55,14 @@ ui <- tagList(
         menuItem("Cluster Cells", tabName = "clusterCells", icon = icon("th")),
         menuItem(
           "Non-linear Reduction",
-          tabName = "tsneTab",
+          tabName = "nonLinReductTab",
           icon = icon("th")
         ),
-        menuItem(
-          "Non-linear Reduction",
-          tabName = "umapTab",
-          icon = icon("th")
-        ),
+        # menuItem(
+        #   "Non-linear Reduction",
+        #   tabName = "umapTab",
+        #   icon = icon("th")
+        # ),
         menuItem("Cluster Markers", tabName = "findMarkersTab", icon = icon("th")),
         menuItem(
           "Viz Markers",
@@ -98,8 +99,9 @@ ui <- tagList(
         source("ui-tab-pcHeatmapPlot.R", local = TRUE)$value,
         source("ui-tab-jackStrawPlot.R", local = TRUE)$value,
         source("ui-tab-clusterCells.R", local = TRUE)$value,
-        source("ui-tab-tsne.R", local = TRUE)$value,
-        source("ui-tab-umapsc.R", local = TRUE)$value,
+        #source("ui-tab-tsne.R", local = TRUE)$value,
+        #source("ui-tab-umapsc.R", local = TRUE)$value,
+        source("ui-tab-nonLinReductTab.R", local = TRUE)$value,
         source("ui-tab-finish.R", local = TRUE)$value,
         source("ui-tab-findMarkers.R", local = TRUE)$value,
         source("ui-tab-vizMarkers.R", local = TRUE)$value

@@ -5,6 +5,9 @@ observe({
 
 clusterCellsReactive <-
   eventReactive(input$clusterCells, {
+    validate(
+      need(length(input$clustPCDim) > 0, message = "Select at least two PC to use.")
+    )
     withProgress(message = "Processing , please wait",{
       print("Finding Clusters")
 
@@ -20,23 +23,13 @@ clusterCellsReactive <-
       # pbmc <- FindClusters(object = pbmc, reduction.type = input$reducType, dims.use = input$clustPCDim1:input$clustPCDim2,
       #                      resolution = input$clustResolution, print.output = 0, save.SNN = TRUE)
 
-      if(input$sctransformOption == 'sctransformPath')
-        pbmc <- RunUMAP(object = pbmc, dims = input$clustPCDim1:input$clustPCDim2, verbose = FALSE)
+       pbmc <- RunUMAP(object = pbmc, dims = as.numeric(c(input$clustPCDim)), verbose = FALSE)
       
       #v3
-      pbmc <- FindNeighbors(object = pbmc, dims = input$clustPCDim1:input$clustPCDim2)
+      pbmc <- FindNeighbors(object = pbmc, dims = as.numeric(c(input$clustPCDim)))
       myValues$clusterPrintOutput <- capture.output(pbmc <- FindClusters(object = pbmc, resolution = input$clustResolution))
       
-      if(input$sctransformOption == 'sctransformPath')
-      {shinyjs::show(selector = "a[data-value=\"umapTab\"]")
-        js$addStatusIcon("umapTab","next")}
-      else
-      {shinyjs::show(selector = "a[data-value=\"tsneTab\"]")
-        js$addStatusIcon("tsneTab","next")
-        }
-      
-      updateNumericInput(session, "tsnePCDim1", value = input$clustPCDim1)
-      updateNumericInput(session, "tsnePCDim2", value = input$clustPCDim2)
+      updateSelectInput(session, "tsnePCDim", selected = c(input$clustPCDim))
       # updateNumericInput(session, "umapPCDim1", value = input$clustPCDim1)
       # updateNumericInput(session, "umapPCDim2", value = input$clustPCDim2)
       
@@ -44,7 +37,6 @@ clusterCellsReactive <-
 
       js$addStatusIcon("clusterCells","done")
       
-
       return(list('pbmc'=pbmc))
     })}
   )
@@ -70,8 +62,5 @@ output$clustParamsPrint <- renderText({
 })
 
 observeEvent(input$nextRunTsne, {
-  if(input$sctransformOption == 'sctransformPath')
-    GotoTab('umapTab')
-  else
-    GotoTab("tsneTab")
+  GotoTab("nonLinReductTab")
 })
