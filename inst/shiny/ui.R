@@ -17,7 +17,9 @@ require(ggplot2)
 require(reticulate)
 require(uuid)
 require(sctransform)
-reticulate::use_python("/home/shiny/miniconda3/bin/python", required= TRUE)
+
+# for NIDCR shiny server
+# reticulate::use_python("/home/shiny/miniconda3/bin/python", required= TRUE)
 
 ui <- tagList(
   dashboardPage(
