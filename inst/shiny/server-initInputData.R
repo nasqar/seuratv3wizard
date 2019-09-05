@@ -12,8 +12,9 @@ observe({
   shinyjs::hide(selector = "a[data-value=\"runPcaTab\"]")
   shinyjs::hide(selector = "a[data-value=\"jackStrawPlot\"]")
   shinyjs::hide(selector = "a[data-value=\"clusterCells\"]")
-  shinyjs::hide(selector = "a[data-value=\"tsneTab\"]")
-  shinyjs::hide(selector = "a[data-value=\"umapTab\"]")
+  #shinyjs::hide(selector = "a[data-value=\"tsneTab\"]")
+  #shinyjs::hide(selector = "a[data-value=\"umapTab\"]")
+  shinyjs::hide(selector = "a[data-value=\"nonLinReductTab\"]")
   shinyjs::hide(selector = "a[data-value=\"finishTab\"]")
   shinyjs::hide(selector = "a[data-value=\"findMarkersTab\"]")
   shinyjs::hide(selector = "a[data-value=\"vizMarkersTab\"]")
@@ -88,6 +89,9 @@ inputDataReactive <- reactive({
     file.rename(inFile$datapath[3],paste0(filesdir,'/',inFile$name[3]))
 
     pbmc.data <- Read10X(data.dir = filesdir)
+
+    #Trim data for easy testing
+    #pbmc.data = cbind(pbmc.data[,1:100],pbmc.data[,17791:17891])
 
     js$collapse("uploadbox")
     return(list('data'=pbmc.data))
@@ -199,11 +203,17 @@ initSeuratObjReactive <-
 
                     rawData = inputDataReactive()$data
                     js$addStatusIcon("datainput","loading")
+                    
 
                     pbmc <- CreateSeuratObject(counts = rawData, min.cells = input$mincells, min.features = input$mingenes,
-                                               project = input$projectname)
-
-
+                                               project = input$projectname, names.delim = "\\-", names.field = 2)
+                    
+                    if(all(is.na(Idents(pbmc)))) {
+                      idents <- rep.int("1", times = length(Idents(pbmc)))
+                      pbmc[['orig.ident']] <- idents
+                      Idents(pbmc) <- "1"
+                    }
+                    
                     shiny::setProgress(value = 0.8, detail = "Done.")
                     js$addStatusIcon("datainput","done")
                     js$addStatusIcon("qcFilterTab","next")
