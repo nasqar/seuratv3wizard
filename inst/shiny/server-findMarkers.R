@@ -1,6 +1,6 @@
 
 observe({
-
+  
   if(!is.null(myValues$finalData$pbmc))
   {
     updateSelectizeInput(session,'clusterNum',
@@ -9,14 +9,14 @@ observe({
                          choices=levels(pbmc), selected = input$clusterNumVS1)
     updateSelectizeInput(session,'clusterNumVS2',
                          choices=levels(pbmc),selected = input$clusterNumVS2)
-
+    
     updateSelectizeInput(session,'genesToPlotVln',
                          choices=myValues$clusterGenes)
-
+    
     updateSelectizeInput(session,'genesToFeaturePlot',
                          choices=myValues$clusterGenes)
   }
-
+  
 })
 
 
@@ -28,27 +28,24 @@ findClusterMarkersReactive <- eventReactive(input$findClusterMarkers, {
   withProgress(message = "Processing , please wait",{
     pbmc = myValues$finalData$pbmc
     js$addStatusIcon("findMarkersTab","loading")
-
+    
     shiny::setProgress(value = 0.4, detail = "Finding cluster markers ...")
-
+    
     cluster.markers <- FindMarkers(object = pbmc, ident.1 = input$clusterNum, min.pct = input$minPct, test.use = input$testuse, only.pos = input$onlypos)
-
+    
     shiny::setProgress(value = 0.8, detail = "Done.")
-
+    
     if(is.null(myValues$clusterGenes))
       myValues$clusterGenes = rownames(cluster.markers)
     else
       myValues$clusterGenes = c(myValues$clusterGenes, rownames(cluster.markers) )
-
+    
     myValues$clusterGenes = unique(myValues$clusterGenes)
-
-
-    updateSelectizeInput(session,'genesToPlotVln',
-                         choices=VariableFeatures(object = pbmc), selected=NULL)
-
-    updateSelectizeInput(session,'genesToFeaturePlot',
-                         choices=VariableFeatures(object = pbmc), selected=NULL)
-
+    
+    updateSelectizeInput(session,'genesToPlotVln', choices=VariableFeatures(object = pbmc), selected=NULL)
+    
+    updateSelectizeInput(session,'genesToFeaturePlot', choices=VariableFeatures(object = pbmc), selected=NULL)
+    
     js$addStatusIcon("findMarkersTab","done")
     return(list("clustername" = paste0("cluster",input$clusterNum),"clustermarkers"=cluster.markers))
   })
@@ -56,17 +53,20 @@ findClusterMarkersReactive <- eventReactive(input$findClusterMarkers, {
 
 output$clusterMarkers <- renderDataTable({
   tmp <- findClusterMarkersReactive()
-
+  
   if(!is.null(tmp)){
     tmp$clustermarkers
   }
-
+  
 })
 
 output$downloadClusterMarkersCSV <- downloadHandler(
-  filename = function()  {paste0(findClusterMarkersReactive()$clustername,".csv")},
+  filename = function() {
+    paste0(findClusterMarkersReactive()$clustername,".csv")
+  },
   content = function(file) {
-    write.csv(findClusterMarkersReactive()$clustermarkers, file, row.names=TRUE)}
+    write.csv(findClusterMarkersReactive()$clustermarkers, file, row.names=TRUE)
+  }
 )
 
 output$clusterMarkersAvailable <-
@@ -83,42 +83,44 @@ observe({
 findClusterMarkersVSReactive <- eventReactive(input$findClusterMarkersVS, {
   withProgress(message = "Processing , please wait",{
     pbmc = myValues$finalData$pbmc
-
+    
     js$addStatusIcon("findMarkersTab","loading")
-
+    
     shiny::setProgress(value = 0.4, detail = "Finding cluster markers ...")
     cluster.markers <- FindMarkers(object = pbmc, ident.1 = input$clusterNumVS1, ident.2 = input$clusterNumVS2, min.pctvs = input$minPct, test.use = input$testuseVS, only.pos = input$onlyposVS)
-
+    
     if(is.null(myValues$clusterGenes))
       myValues$clusterGenes = rownames(cluster.markers)
     else
       myValues$clusterGenes = c(myValues$clusterGenes, rownames(cluster.markers) )
-
+    
     myValues$clusterGenes = unique(myValues$clusterGenes)
-
+    
     shiny::setProgress(value = 0.8, detail = "Done.")
     js$addStatusIcon("findMarkersTab","done")
-
-
+    
+    
     return(list("clustername" = paste0("cluster",input$clusterNumVS1,"_vs_clusters_",paste(input$clusterNumVS2, collapse = "_")),"clustermarkers"=cluster.markers))
-
+    
   })
 })
 
 output$clusterMarkersVS <- renderDataTable({
   tmp <- findClusterMarkersVSReactive()
-
+  
   if(!is.null(tmp)){
     tmp$clustermarkers
   }
-
+  
 })
 
 output$downloadClusterMarkersVSCSV <- downloadHandler(
-  filename = function()  {paste0(findClusterMarkersVSReactive()$clustername,".csv")},
+  filename = function() {
+    paste0(findClusterMarkersVSReactive()$clustername,".csv")
+  },
   content = function(file) {
     write.csv(findClusterMarkersVSReactive()$clustermarkers, file, row.names=TRUE)
-    }
+  }
 )
 
 output$clusterMarkersVSAvailable <-
@@ -129,8 +131,6 @@ outputOptions(output, 'clusterMarkersVSAvailable', suspendWhenHidden=FALSE)
 
 
 # ALL MARKERS
-
-
 observe({
   findClusterMarkersAllReactive()
 })
@@ -138,28 +138,23 @@ observe({
 findClusterMarkersAllReactive <- eventReactive(input$findClusterMarkersAll, {
   withProgress(message = "Processing , please wait",{
     pbmc = myValues$finalData$pbmc
-
+    
     myValues$cellBrowserLinkExists = F
     
     js$addStatusIcon("findMarkersTab","loading")
-
+    
     shiny::setProgress(value = 0.4, detail = "Finding cluster markers ...")
-
+    
     cluster.markers <- FindAllMarkers(object = pbmc, min.pctvs = input$minPctAll, test.use = input$testuseAll, only.pos = input$onlyposAll, logfc.threshold = input$threshAll)
-
-    if(input$numGenesPerCluster > 0)
-    {
+    
+    if(input$numGenesPerCluster > 0){
       cluster.markers = cluster.markers %>% group_by(cluster) %>% top_n(input$numGenesPerCluster, avg_logFC)
       
       cluster.markers = as.data.frame(cluster.markers)
-      #rownames(cluster.markers) = make.names(cluster.markers$gene, unique = T)
     }
-      
-
-    
-    
+  
     myValues$clusterGenes = cluster.markers$gene
-
+    
     folderuuid = UUIDgenerate()
     
     myValues$clusterFilePath = paste0(tempdir(),"/allclustermarkers-",folderuuid,".csv")
@@ -168,23 +163,25 @@ findClusterMarkersAllReactive <- eventReactive(input$findClusterMarkersAll, {
     
     shiny::setProgress(value = 0.8, detail = "Done.")
     js$addStatusIcon("findMarkersTab","done")
-
+    
     return(list("clustername" = paste0("allClusterMarkers"),"clustermarkers"=cluster.markers))
-
+    
   })
 })
 
 output$clusterMarkersAll <- renderDataTable({
   tmp <- findClusterMarkersAllReactive()
-
+  
   if(!is.null(tmp)){
     tmp$clustermarkers
   }
-
+  
 })
 
 output$downloadClusterMarkersAllCSV <- downloadHandler(
-  filename =  function() {paste0(findClusterMarkersAllReactive()$clustername,".csv")},
+  filename =  function() {
+    paste0(findClusterMarkersAllReactive()$clustername,".csv")
+  },
   content = function(file) {
     write.csv(findClusterMarkersAllReactive()$clustermarkers, file, row.names=TRUE)}
 )
@@ -196,59 +193,111 @@ output$clusterMarkersAllAvailable <-
 outputOptions(output, 'clusterMarkersAllAvailable', suspendWhenHidden=FALSE)
 
 output$clusterHeatmap <- renderPlot({
-  if(input$generateHeatmap > 0)
-  {
-  withProgress(message = "Processing , please wait",{
-    
-    pbmc = myValues$finalData$pbmc
-    
-    isolate({
-      allmarkers = findClusterMarkersAllReactive()$clustermarkers
-      allmarkers %>% group_by(cluster) %>% top_n(n = input$topGenesPerCluster, wt = avg_logFC) -> selectedGenes
+  if(input$generateHeatmap > 0){
+    withProgress(message = "Processing , please wait", {
+      clusterHeatmapFunc()
     })
-    return(DoHeatmap(object = pbmc, features = selectedGenes$gene))
-    
-  })
-}
+  }
 })
 
+#cluster heatmap output and download handler
+clusterHeatmapFunc = reactive({
+  pbmc = myValues$finalData$pbmc
+  isolate({
+    allmarkers = findClusterMarkersAllReactive()$clustermarkers
+    allmarkers %>% group_by(cluster) %>% top_n(n = input$topGenesPerCluster, wt = avg_logFC) -> selectedGenes
+  })
+  DoHeatmap(object = pbmc, features = selectedGenes$gene)
+})
+
+output$downloadClusterHeatmap <- downloadHandler(
+  filename <- function() {
+    paste(input$projectname, "_ClusterHeatMap", input$clusterHeatmapDownloadAs,sep="")
+  },
+  content <- function(file) {
+    ggsave(file, clusterHeatmapFunc(), width = input$clusterHeatmapDownloadWidth,
+           height = input$clusterHeatmapDownloadHeight, units = "cm", dpi = 300)
+  },
+  contentType = "image"
+)
+
+#VLN plot output and download handler
+vlnPlotFunc = reactive({
+  validate(
+    need(length(input$genesToPlotVln) > 0, message = "Select at least one gene")
+  )
+  
+  pbmc = myValues$finalData$pbmc
+  
+  VlnPlot(object = pbmc, features = input$genesToPlotVln, log = input$ylog)
+})
 
 output$VlnMarkersPlot = renderPlot({
-
   if(input$plotVlns < 1)
     return()
-
+  
   isolate({
-    validate(
-      need(length(input$genesToPlotVln) > 0, message = "Select atleast one gene")
-    )
-
-    pbmc = myValues$finalData$pbmc
-
-    VlnPlot(object = pbmc, features = input$genesToPlotVln, log = input$ylog)
+    vlnPlotFunc()
   })
+})
 
+outputOptions(output, 'VlnMarkersPlot', suspendWhenHidden = FALSE) #to use in UI's conditional panel
+
+output$downloadVlnPlot <- downloadHandler(
+  filename <- function() {
+    paste(input$projectname, "_VlnPlot", input$vlnDownloadAs,sep="")
+  },
+  content <- function(file) {
+    validate(
+      need(length(input$genesToPlotVln) > 0, message = "Select at least one gene")
+    )
+    ggsave(file, vlnPlotFunc(), width = input$vlnDownloadWidth,
+           height = input$vlnDownloadHeight, units = "cm", dpi = 300)
+  },
+  contentType = "image"
+)
+
+
+#Feature Markers plot output and download handler
+featurePlotFunc = reactive({
+  validate(
+    need(length(input$genesToFeaturePlot) > 0, message = "Select at least one gene")
+  )
+  
+  pbmc = myValues$finalData$pbmc
+  
+  if(input$sctransformOption == 'defaultPath')
+    FeaturePlot(object = pbmc, features = input$genesToFeaturePlot, cols = c("gray88", "blue"),reduction = input$reducUseFeature, pt.size = 2)
+  else
+    FeaturePlot(object = pbmc, features = input$genesToFeaturePlot, cols = c("gray88", "blue"),reduction = input$reducUseFeature, pt.size = 2)
 })
 
 output$FeatureMarkersPlot = renderPlot({
-
   if(input$plotFeatureMarkers < 1)
     return()
-
+  
   isolate({
-    validate(
-      need(length(input$genesToFeaturePlot) > 0, message = "Select atleast one gene")
-    )
-
-    pbmc = myValues$finalData$pbmc
-
-    if(input$sctransformOption == 'defaultPath')
-      FeaturePlot(object = pbmc, features = input$genesToFeaturePlot, cols = c("gray88", "blue"),reduction = input$reducUseFeature, pt.size = 2)
-    else
-      FeaturePlot(object = pbmc, features = input$genesToFeaturePlot, cols = c("gray88", "blue"), pt.size = 2)
+    featurePlotFunc()
   })
-
 })
+
+outputOptions(output, 'FeatureMarkersPlot', suspendWhenHidden = FALSE) #to use in UI's conditional panel
+
+output$downloadFeaturePlot <- downloadHandler(
+  filename <- function() {
+    paste(input$projectname, "_FeatureMarkersPLot", input$featureDownloadAs,sep="")
+  },
+  content <- function(file) {
+    if (length(input$genesToFeaturePlot) == 0){
+      session$sendCustomMessage(type = 'alert', message = "Select at least one gene and plot before downloading the plot.")
+    }
+    req(input$genesToFeaturePlot)
+    ggsave(file, featurePlotFunc(), width = input$featureDownloadWidth,
+           height = input$featureDownloadHeight, units = "cm", dpi = 300)
+  },
+  contentType = "image"
+)
+
 
 observe({
   if(input$viewCellBrowser > 0)
@@ -300,9 +349,6 @@ output$cellBrowserLinkExists <-
     FALSE
   })
 outputOptions(output, 'cellBrowserLinkExists', suspendWhenHidden=FALSE)
-
-
-
 
 output$cellbrowserlink <- renderUI({
   column(12,
