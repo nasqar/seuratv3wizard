@@ -6,6 +6,7 @@ Sep 5, 2019
 - file with multiple samples can be uploaded
 - tsne and umap are both always calculated
 
+Apr 25, 2019
 - [Seurat v3](https://github.com/satijalab/seurat)
 - [sctransform Option](https://github.com/ChristophH/sctransform)
 - [UCSC Cellbrowser](https://github.com/maximilianh/cellBrowser)
