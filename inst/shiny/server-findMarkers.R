@@ -241,8 +241,6 @@ output$VlnMarkersPlot = renderPlot({
   })
 })
 
-outputOptions(output, 'VlnMarkersPlot', suspendWhenHidden = FALSE) #to use in UI's conditional panel
-
 output$downloadVlnPlot <- downloadHandler(
   filename <- function() {
     paste(input$projectname, "_VlnPlot", input$vlnDownloadAs,sep="")
@@ -281,7 +279,6 @@ output$FeatureMarkersPlot = renderPlot({
   })
 })
 
-outputOptions(output, 'FeatureMarkersPlot', suspendWhenHidden = FALSE) #to use in UI's conditional panel
 
 output$downloadFeaturePlot <- downloadHandler(
   filename <- function() {

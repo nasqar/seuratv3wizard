@@ -61,8 +61,6 @@ output$pcElbowPlot <- renderPlot({
   }
 })
 
-outputOptions(output, 'pcElbowPlot', suspendWhenHidden = FALSE) #to use in UI's conditional panel
-
 output$downloadElbowPlot <- downloadHandler(
   filename <- function() {
     paste(input$projectname, "_ElbowPlot", input$elbowDownloadAs,sep="")

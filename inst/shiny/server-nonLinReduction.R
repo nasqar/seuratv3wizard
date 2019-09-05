@@ -103,7 +103,7 @@ outputOptions(output, 'tsnePlotAvailable', suspendWhenHidden=FALSE)
 UmapPlotFunc = reactive({
   pbmc <- umapReactive()$pbmc
   
-  DimPlot(object = pbmc,reduction = input$reductionMethod, label = TRUE, group.by = input$umapGroupBy)
+  DimPlot(object = pbmc,reduction = "umap", label = TRUE, group.by = input$umapGroupBy)
   #TSNEPlot(object = pbmc, do.label = TRUE)
   #DimPlot(object = pbmc, reduction = 'tsne', do.label = TRUE, group.by = input$tsneGroupBy)
 })
