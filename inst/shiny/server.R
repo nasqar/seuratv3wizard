@@ -1,9 +1,9 @@
 
 #max upload 300mb
-options(shiny.maxRequestSize = 300*1024^2)
+options(shiny.maxRequestSize = 400*1024^2)
 options(future.globals.maxSize = 10 * 1024 ^ 3)
 library(future)
-plan("multiprocess", workers = 10)
+plan("multiprocess", workers = 2)
 
 server <- function(input, output, session) {
 
