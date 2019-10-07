@@ -19,10 +19,9 @@ jackStrawReactive <-
       #pbmc <- JackStraw(object = pbmc, num.replicate = input$numReplicates, do.par = T)
       
       #v3
-      plan("multiprocess", workers = 8)
+      plan("multiprocess", workers = parallel::detectCores() / 2)
       pbmc <- JackStraw(object = pbmc, num.replicate = input$numReplicates)
       pbmc <- ScoreJackStraw(object = pbmc, dims = input$jsPcsToPlot1:input$jsPcsToPlot2)
-      plan("multiprocess", workers = 16)
       
       ########
       

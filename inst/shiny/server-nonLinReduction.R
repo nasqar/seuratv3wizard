@@ -41,7 +41,6 @@ observe({
 umapReactive <-
   eventReactive({
     input$runUmap
-    input$nextRunTsne
   }, {
       withProgress(message = "Processing , please wait",{
         print("Umap")
@@ -128,7 +127,7 @@ output$downloadUmap <- downloadHandler(
 output$umapPlotAvailable <- reactive({
   return(!is.null(umapReactive()$pbmc))
 })
-#outputOptions(output, 'umapPlotAvailable', suspendWhenHidden=FALSE)
+outputOptions(output, 'umapPlotAvailable', suspendWhenHidden=FALSE)
 
 ### Cells in Clusters
 output$clustercellsavailable <-
@@ -144,7 +143,11 @@ observe({
 
 
 cellsInClusterReactive <- eventReactive(input$findCellsInCluster, {
-  pbmc <- tsneReactive()$pbmc
+  if(input$reductionMethod == 'tsne')
+    pbmc <- tsneReactive()$pbmc
+  else
+    pbmc <- umapReactive()$pbmc
+  
   cellsInCluster <- WhichCells(object = pbmc, ident = input$clusterNumCells)
 
   print(length(cellsInCluster))
@@ -179,12 +182,12 @@ output$downloadClusterCells <- downloadHandler(
 
 
 observe({
-  if(input$nextClusterMarkers > 0 || input$nextClusterMarkersUmap > 0)
+  if(input$nextClusterMarkers > 0 )
     GotoTab("findMarkersTab")
 })
 
 observe({
-  if(input$nextDownload > 0 || input$nextDownloadUmap > 0)
+  if(input$nextDownload > 0 )
     GotoTab("finishTab")
 })
 

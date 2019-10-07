@@ -23,7 +23,6 @@ clusterCellsReactive <-
       # pbmc <- FindClusters(object = pbmc, reduction.type = input$reducType, dims.use = input$clustPCDim1:input$clustPCDim2,
       #                      resolution = input$clustResolution, print.output = 0, save.SNN = TRUE)
 
-      browser()
       pbmc <- RunUMAP(object = pbmc, dims = as.numeric(c(input$clustPCDim)), verbose = FALSE)
       
       #v3
@@ -37,7 +36,10 @@ clusterCellsReactive <-
       shinyjs::show(selector = "a[data-value=\"nonLinReductTab\"]")
       shinyjs::show(selector = "a[data-value=\"clusterCells\"]")
 
+      updateSelectizeInput(session, "tsnePCDim", choices = 1:50, selected = input$clustPCDim)
+      
       js$addStatusIcon("clusterCells","done")
+      js$addStatusIcon("nonLinReductTab","next")
       
       return(list('pbmc'=pbmc))
     })}

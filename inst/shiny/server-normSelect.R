@@ -18,10 +18,10 @@ findVariableGenesReactive <-
       
       shiny::setProgress(value = 0.4, detail = "Normalizing Data ...")
       
+      plan("multiprocess", workers = parallel::detectCores() / 2)
+      
       pbmc <- NormalizeData(object = pbmc, normalization.method = input$normMethod,
                             scale.factor = input$scaleFactor)
-      
-      
       
       
       shiny::setProgress(value = 0.6, detail = "Finding Variable Genes ...")
@@ -42,6 +42,7 @@ findVariableGenesReactive <-
       #pbmc <- ScaleData(object = pbmc, vars.to.regress = input$varsToRegress, do.par = T)
       
       #v3
+      plan("multiprocess", workers = parallel::detectCores() / 2)
       pbmc <- ScaleData(object = pbmc, vars.to.regress = input$varsToRegress)
       
       shinyjs::show(selector = "a[data-value=\"runPcaTab\"]")
