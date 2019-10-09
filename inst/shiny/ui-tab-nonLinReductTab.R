@@ -107,20 +107,23 @@ tabItem(tabName = "nonLinReductTab",
                           )
                           ,
                           hr(),
-                          p(
-                            actionButton(
-                              "nextClusterMarkers",
-                              "Next Step: Find Cluster Markers",
-                              class = "button button-3d button-pill button-caution"
-                            ),
-                            hr(),
-                            actionButton(
-                              "nextDownload",
-                              "Download Seurat Object",
-                              class = "button button-3d button-pill",
-                              icon = icon("download")
+                          conditionalPanel("output.umapPlotAvailable || output.tsnePlotAvailable",
+                            p(
+                              actionButton(
+                                "nextClusterMarkers",
+                                "Next Step: Find Cluster Markers",
+                                class = "button button-3d button-pill button-caution"
+                              ),
+                              hr(),
+                              actionButton(
+                                "nextDownload",
+                                "Download Seurat Object",
+                                class = "button button-3d button-pill",
+                                icon = icon("download")
+                              )
                             )
-                          ),
+                          )
+                          ,
                           tags$div(class = "clearBoth")
                  )
           )
