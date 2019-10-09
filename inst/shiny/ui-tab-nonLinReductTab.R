@@ -22,8 +22,6 @@ tabItem(tabName = "nonLinReductTab",
                                                                        p("Seurat continues to use tSNE as a powerful tool to visualize and explore these datasets. While we no longer advise clustering directly on tSNE components, cells within the graph-based clusters determined above should co-localize on the tSNE plot. This is because the tSNE aims to place cells with similar local neighborhoods in high-dimensional space together in low-dimensional space. As input to the tSNE, we suggest using the same PCs as input to the clustering analysis, although computing the tSNE based on scaled gene expression is also supported using the genes.use argument."),
                                                                        column(6,selectizeInput("tsnePCDim", "Choose Dimensions(PC) To Use", multiple = TRUE, choices = c(1:20),selected = c(1,2,3,4,5))),
                                                                        column(6,numericInput("tsnePerplexity", "Perplexity:", value = 30)),
-
-                                                                       p("Once running the reduction is complete, you can also view/download cells in each cluster"),
                                                                        tags$div(class = "clearBoth")
                                                               )
 
@@ -52,6 +50,30 @@ tabItem(tabName = "nonLinReductTab",
                                                        column(12,
                                                               actionButton("runTSNE","Run TSNE Reduction",class = "button button-3d button-block button-pill button-primary button-large", style = "width: 100%")
                                                        ),
+                                      column(12,
+                                             wellPanel(
+                                               
+                                               p("Once running the reduction is complete, you can also view/download cells in each cluster"),
+                                               column(12,
+                                                      wellPanel(
+                                                        h4("Find Cells in Clusters:"),
+                                                        column(6,selectInput("clusterNumCells", "Cluster Num",
+                                                                             choices = NULL, selected = 1)),
+                                                        div(style = "clear:both;"),
+                                                        actionButton("findCellsInCluster","Find Cells in Clusters",class = "button button-3d button-block button-primary")
+                                                      )
+                                                      ,
+                                                      conditionalPanel("output.clustercellsavailable",
+                                                                       downloadButton('downloadClusterCells','Save Results as CSV File', class = "btn btn-primary"),
+                                                                       withSpinner(dataTableOutput('cellsInClusters'))
+                                                      )
+                                                      
+                                               ),
+                                               tags$div(class = "clearBoth")
+                                             )
+                                      ),
+                                      
+                                      
                                                        tags$div(class = "clearBoth")
                                       ),
                                       conditionalPanel("input.reductionMethod == 'umap'",
@@ -84,28 +106,7 @@ tabItem(tabName = "nonLinReductTab",
 
                           )
                           ,
-                          column(12,
-                                 hr(),
-                                 wellPanel("Find Cells in Clusters",
-                                           column(12,
-                                                  wellPanel(
-                                                    h4("Find Cells in Clusters:"),
-                                                    column(6,selectInput("clusterNumCells", "Cluster Num",
-                                                                         choices = NULL, selected = 1)),
-                                                    div(style = "clear:both;"),
-                                                    actionButton("findCellsInCluster","Find Cells in Clusters",class = "button button-3d button-block button-primary")
-                                                  )
-                                                  ,
-                                                  conditionalPanel("output.clustercellsavailable",
-                                                                   downloadButton('downloadClusterCells','Save Results as CSV File', class = "btn btn-primary"),
-                                                                   withSpinner(dataTableOutput('cellsInClusters'))
-                                                  )
-                                                  
-                                           ),
-                                           tags$div(class = "clearBoth")
-                                 )
-                                 ),
-                          
+                          hr(),
                           p(
                             actionButton(
                               "nextClusterMarkers",
