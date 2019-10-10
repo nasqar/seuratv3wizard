@@ -3,6 +3,7 @@ observe({
   
   if(!is.null(myValues$finalData$pbmc))
   {
+    pbmc = myValues$finalData$pbmc
     updateSelectizeInput(session,'clusterNum',
                          choices=levels(pbmc), selected = input$clusterNum)
     updateSelectizeInput(session,'clusterNumVS1',
@@ -31,6 +32,7 @@ findClusterMarkersReactive <- eventReactive(input$findClusterMarkers, {
     
     shiny::setProgress(value = 0.4, detail = "Finding cluster markers ...")
     
+    plan("multiprocess", workers = parallel::detectCores() / 2)
     cluster.markers <- FindMarkers(object = pbmc, ident.1 = input$clusterNum, min.pct = input$minPct, test.use = input$testuse, only.pos = input$onlypos)
     
     shiny::setProgress(value = 0.8, detail = "Done.")
@@ -87,7 +89,9 @@ findClusterMarkersVSReactive <- eventReactive(input$findClusterMarkersVS, {
     js$addStatusIcon("findMarkersTab","loading")
     
     shiny::setProgress(value = 0.4, detail = "Finding cluster markers ...")
-    cluster.markers <- FindMarkers(object = pbmc, ident.1 = input$clusterNumVS1, ident.2 = input$clusterNumVS2, min.pctvs = input$minPct, test.use = input$testuseVS, only.pos = input$onlyposVS)
+    
+    plan("multiprocess", workers = parallel::detectCores() / 2)
+    cluster.markers <- FindMarkers(object = pbmc, ident.1 = input$clusterNumVS1, ident.2 = input$clusterNumVS2, min.pct = input$minPct, test.use = input$testuseVS, only.pos = input$onlyposVS)
     
     if(is.null(myValues$clusterGenes))
       myValues$clusterGenes = rownames(cluster.markers)
@@ -145,7 +149,8 @@ findClusterMarkersAllReactive <- eventReactive(input$findClusterMarkersAll, {
     
     shiny::setProgress(value = 0.4, detail = "Finding cluster markers ...")
     
-    cluster.markers <- FindAllMarkers(object = pbmc, min.pctvs = input$minPctAll, test.use = input$testuseAll, only.pos = input$onlyposAll, logfc.threshold = input$threshAll)
+    plan("multiprocess", workers = parallel::detectCores() / 2)
+    cluster.markers <- FindAllMarkers(object = pbmc, min.pct = input$minPctAll, test.use = input$testuseAll, only.pos = input$onlyposAll, logfc.threshold = input$threshAll)
     
     if(input$numGenesPerCluster > 0){
       cluster.markers = cluster.markers %>% group_by(cluster) %>% top_n(input$numGenesPerCluster, avg_logFC)

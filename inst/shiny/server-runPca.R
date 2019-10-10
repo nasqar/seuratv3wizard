@@ -32,6 +32,9 @@ runPcaReactive <-
 
       numCellsToUse = ifelse(ncol(x = pbmc) > 500, 500, ncol(x = pbmc))
       updateNumericInput(session, "cellsToUse", value = numCellsToUse)
+      
+      updateSelectizeInput(session, "clustPCDim", choices = 1:50, selected = 1:10)
+      
       updateTabItems(session, "tabs", "runPcaTab")
 
       return(list('pbmc'=pbmc))
