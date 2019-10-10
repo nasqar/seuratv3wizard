@@ -52,6 +52,7 @@ tabItem(tabName = "nonLinReductTab",
                                                        ),
                                       conditionalPanel("output.tsnePlotAvailable",
                                       column(12,
+                                             hr(),
                                              wellPanel(
                                                
                                                p("Once running the reduction is complete, you can also view/download cells in each cluster"),
