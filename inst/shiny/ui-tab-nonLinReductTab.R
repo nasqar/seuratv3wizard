@@ -50,6 +50,7 @@ tabItem(tabName = "nonLinReductTab",
                                                        column(12,
                                                               actionButton("runTSNE","Run TSNE Reduction",class = "button button-3d button-block button-pill button-primary button-large", style = "width: 100%")
                                                        ),
+                                      conditionalPanel("output.tsnePlotAvailable",
                                       column(12,
                                              wellPanel(
                                                
@@ -71,6 +72,7 @@ tabItem(tabName = "nonLinReductTab",
                                                ),
                                                tags$div(class = "clearBoth")
                                              )
+                                      )
                                       ),
                                       
                                       
