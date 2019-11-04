@@ -149,7 +149,7 @@ findClusterMarkersAllReactive <- eventReactive(input$findClusterMarkersAll, {
     
     shiny::setProgress(value = 0.4, detail = "Finding cluster markers ...")
     
-    plan("multiprocess", workers = parallel::detectCores() / 2)
+    plan("multiprocess", workers = 3)
     cluster.markers <- FindAllMarkers(object = pbmc, min.pct = input$minPctAll, test.use = input$testuseAll, only.pos = input$onlyposAll, logfc.threshold = input$threshAll)
     
     if(input$numGenesPerCluster > 0){
