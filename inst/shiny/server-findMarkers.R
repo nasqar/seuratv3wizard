@@ -32,7 +32,7 @@ findClusterMarkersReactive <- eventReactive(input$findClusterMarkers, {
     
     shiny::setProgress(value = 0.4, detail = "Finding cluster markers ...")
     
-    plan("multiprocess", workers = parallel::detectCores() / 2)
+    plan("multiprocess", workers = 3)
     cluster.markers <- FindMarkers(object = pbmc, ident.1 = input$clusterNum, min.pct = input$minPct, test.use = input$testuse, only.pos = input$onlypos)
     
     shiny::setProgress(value = 0.8, detail = "Done.")
@@ -90,7 +90,7 @@ findClusterMarkersVSReactive <- eventReactive(input$findClusterMarkersVS, {
     
     shiny::setProgress(value = 0.4, detail = "Finding cluster markers ...")
     
-    plan("multiprocess", workers = parallel::detectCores() / 2)
+    plan("multiprocess", workers = 3)
     cluster.markers <- FindMarkers(object = pbmc, ident.1 = input$clusterNumVS1, ident.2 = input$clusterNumVS2, min.pct = input$minPct, test.use = input$testuseVS, only.pos = input$onlyposVS)
     
     if(is.null(myValues$clusterGenes))
