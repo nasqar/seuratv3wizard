@@ -91,11 +91,10 @@ analyzeDataReactive <-
                     shiny::setProgress(value = 0.3, detail = " Applying Filters ...")
 
                     #######
-
+                    pbmcRawData <- GetAssayData(object = pbmc, slot = "counts")
+                    
                     if(length(myValues$exprList) > 0)
                     {
-
-
                       for (i in 1:length(myValues$exprList)) {
 
                         exprPattern = myValues$exprList[i]
@@ -103,10 +102,12 @@ analyzeDataReactive <-
 
                         pattern.genes <- grep(pattern = exprPattern, x = rownames(x = GetAssayData(object = pbmc)), value = TRUE)
                         
-                        #percent.pattern <- Matrix::colSums(pbmc@raw.data[pattern.genes, ])/Matrix::colSums(pbmc@raw.data)
                         #v3
-                        percent.pattern <- Matrix::colSums(x = GetAssayData(object = pbmc, slot = 'counts')[pattern.genes, ]) / Matrix::colSums(x = GetAssayData(object = pbmc, slot = 'counts'))
-
+                        if(length(pattern.genes) > 1)
+                          percent.pattern <- Matrix::colSums(x = pbmcRawData[pattern.genes, ]) / Matrix::colSums(x = pbmcRawData)
+                        else
+                          percent.pattern <- pbmcRawData[pattern.genes, ] / Matrix::colSums(x = pbmcRawData)
+                        
                         pbmc <- AddMetaData(object = pbmc, metadata = percent.pattern, col.name = paste("percent.",exprName, sep = ""))
                         
                         #v3
@@ -115,14 +116,15 @@ analyzeDataReactive <-
                       }
                     }
 
-                    pbmcRawData <- GetAssayData(object = pbmc, slot = "counts")
                     
                     if(length(input$filterSpecGenes) > 0)
                     {
                       
-
-                      percent.pattern <- Matrix::colSums(pbmcRawData[input$filterSpecGenes, ])/Matrix::colSums(pbmcRawData)
-
+                      if(length(input$filterSpecGenes) > 1)
+                        percent.pattern <- Matrix::colSums(pbmcRawData[input$filterSpecGenes, ])/Matrix::colSums(pbmcRawData)
+                      else
+                        percent.pattern <- pbmcRawData[input$filterSpecGenes, ]/Matrix::colSums(pbmcRawData)
+                      
                       pbmc <- AddMetaData(object = pbmc, metadata = percent.pattern, col.name = paste0("percent.",input$customGenesLabel))
 
                     }
@@ -130,8 +132,11 @@ analyzeDataReactive <-
                     if(length(input$filterPasteGenes) > 0)
                     {
 
-                      percent.pattern <- Matrix::colSums(pbmcRawData[input$filterPasteGenes, ])/Matrix::colSums(pbmcRawData)
-
+                      if(length(input$filterPasteGenes) > 1)
+                        percent.pattern <- Matrix::colSums(pbmcRawData[input$filterPasteGenes, ])/Matrix::colSums(pbmcRawData)
+                      else
+                        percent.pattern <- pbmcRawData[input$filterPasteGenes, ]/Matrix::colSums(pbmcRawData)
+                      
                       pbmc <- AddMetaData(object = pbmc, metadata = percent.pattern, col.name = paste0("percent.",input$pasteGenesLabel))
 
                     }
