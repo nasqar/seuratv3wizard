@@ -1,7 +1,7 @@
 
 #max upload 300mb
 options(shiny.maxRequestSize = 400*1024^2)
-#options(future.globals.maxSize = 10 * 1024 ^ 3)
+options(future.globals.maxSize = 3 * 1024 ^ 2)
 library(future)
 #plan("multiprocess", workers = 2)
 
