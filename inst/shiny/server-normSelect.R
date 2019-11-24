@@ -90,6 +90,7 @@ sctransformReactive <-
       
       shiny::setProgress(value = 0.4, detail = "Running SCTransform ...")
       
+      plan("multiprocess", workers = 3)
       pbmc <- SCTransform(object = pbmc, verbose = F, vars.to.regress = input$varsToRegressUmap)
       
       shinyjs::show(selector = "a[data-value=\"runPcaTab\"]")
