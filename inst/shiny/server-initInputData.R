@@ -79,7 +79,6 @@ inputDataReactive <- reactive({
     )
 
 
-
     filesdir = dirname(inFile[1,4])
 
     #inFile = inFile$datapath
@@ -88,8 +87,22 @@ inputDataReactive <- reactive({
     file.rename(inFile$datapath[2],paste0(filesdir,'/',inFile$name[2]))
     file.rename(inFile$datapath[3],paste0(filesdir,'/',inFile$name[3]))
 
+    withProgress(message = "Reading 10X data, please wait ...",{
+      
+    if(any(list.files(filesdir) == "genes.tsv.gz"))
+    {
+      
+        R.utils::gunzip(file.path(filesdir,"matrix.mtx.gz"))
+        R.utils::gunzip(file.path(filesdir,"genes.tsv.gz"))
+        R.utils::gunzip(file.path(filesdir,"barcodes.tsv.gz"))
+      
+    }
+    
+      shiny::setProgress(value = 0.8)
+      
     pbmc.data <- Read10X(data.dir = filesdir)
 
+    })
     #Trim data for easy testing
     #pbmc.data = cbind(pbmc.data[,1:100],pbmc.data[,17791:17891])
 
