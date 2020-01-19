@@ -89,12 +89,11 @@ inputDataReactive <- reactive({
 
     withProgress(message = "Reading 10X data, please wait ...",{
       
+      # cellranger < 3.0
     if(any(list.files(filesdir) == "genes.tsv.gz"))
     {
       
-        R.utils::gunzip(file.path(filesdir,"matrix.mtx.gz"))
-        R.utils::gunzip(file.path(filesdir,"genes.tsv.gz"))
-        R.utils::gunzip(file.path(filesdir,"barcodes.tsv.gz"))
+      file.rename(file.path(filesdir,"genes.tsv.gz"), file.path(filesdir,"features.tsv.gz"))
       
     }
     
