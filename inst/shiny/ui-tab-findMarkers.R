@@ -20,7 +20,7 @@ tabItem(tabName = "findMarkersTab",
                                                                       column(4,numericInput("minPctAll", "Min % (min.pct)", value = 0.25)),
                                                                       column(4,selectInput("testuseAll", "Test to use",
                                                                                            choices = c("wilcox","bimod","roc","t","negbinom","poisson","LR","MAST","DESeq2")
-                                                                                           , selected = "negbinom")),
+                                                                                           , selected = "wilcox")),
                                                                       column(4,numericInput("threshAll", "Logfc Thresh", value = 0.25)),
                                                                       column(8,numericInput("numGenesPerCluster", "# top genes to show per cluster (0 to show all)", value = 0)),
                                                                       column(4, checkboxInput("onlyposAll","Show Only Positive Markers"), value = FALSE),
