@@ -14,6 +14,9 @@ Apr 25, 2019
 ## Online/Live instance:
 You can try it online at http://nasqar.abudhabi.nyu.edu/SeuratV3Wizard
 
+## Pre-print:
+[NASQAR: A web-based platform for High-throughput sequencing data analysis and visualization](https://doi.org/10.1101/709980)
+
 ## Run using docker (Recommended):
 Make sure Docker (version >= 17.03.0-ce) is installed.
 ```
