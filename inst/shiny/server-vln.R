@@ -196,6 +196,11 @@ filterCellsReactive <-
         
         pbmc = pbmc[, which(x = expr >  lowThresh[i] & expr < highThresh[i])]
         
+        if(grepl("^percent\\.",varName) )
+          myValues$scriptCommands[[paste0('subset',i)]] = paste0('pbmc <- subset(x = pbmc, subset = ', varName, ' > ',lowThresh[i]*100,' & ', varName, ' < ',highThresh[i]*100,')')
+        else
+          myValues$scriptCommands[[paste0('subset',i)]] = paste0('pbmc <- subset(x = pbmc, subset = ', varName, ' > ',lowThresh[i],' & ', varName, ' < ',highThresh[i],')')
+        
       }
       
       

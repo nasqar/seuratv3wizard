@@ -25,7 +25,6 @@ server <- function(input, output, session) {
 
   source("server-clusterCells.R",local = TRUE)
 
-  #source("server-tsne.R",local = TRUE)
   source("server-nonLinReduction.R", local = TRUE)
 
   source("server-download.R",local = TRUE)
@@ -33,7 +32,6 @@ server <- function(input, output, session) {
   source("server-findMarkers.R",local = TRUE)
 
   GotoTab <- function(name){
-    #updateTabItems(session, "tabs", name)
     
     shinyjs::show(selector = paste0("a[data-value=\"",name,"\"]"))
     

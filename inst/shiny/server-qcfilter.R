@@ -113,6 +113,7 @@ analyzeDataReactive <-
                         #v3
                         pbmc[[paste0("percent.",exprName)]] <- percent.pattern
 
+                        myValues$scriptCommands[[paste0("metadata",i)]] = paste0('pbmc[[','"percent.',exprName,'"]] <- ','PercentageFeatureSet(pbmc, pattern = "',myValues$exprList[i],'")')
                       }
                     }
 
@@ -162,6 +163,7 @@ analyzeDataReactive <-
                                          choices=subsetNames, selected=subsetNames)
                     #####
 
+                    myValues$scriptCommands$vln = paste0('VlnPlot(pbmc, features = ',vectorToStr(c(subsetNames,"nCount_RNA")),', ncol = ',length(subsetNames),')')
 
                     js$addStatusIcon("qcFilterTab","done")
 

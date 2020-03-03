@@ -4,7 +4,6 @@ observe({
   shinyjs::hide(selector = "a[data-value=\"qcFilterTab\"]")
   shinyjs::hide(selector = "a[data-value=\"vlnplot\"]")
   shinyjs::hide(selector = "a[data-value=\"filterNormSelectTab\"]")
-  # shinyjs::hide(selector = "a[data-value=\"dispersionPlot\"]")
   
   shinyjs::hide(selector = "a[data-value=\"vizPcaPlot\"]")
   shinyjs::hide(selector = "a[data-value=\"pcaPlot\"]")
@@ -12,8 +11,6 @@ observe({
   shinyjs::hide(selector = "a[data-value=\"runPcaTab\"]")
   shinyjs::hide(selector = "a[data-value=\"jackStrawPlot\"]")
   shinyjs::hide(selector = "a[data-value=\"clusterCells\"]")
-  #shinyjs::hide(selector = "a[data-value=\"tsneTab\"]")
-  #shinyjs::hide(selector = "a[data-value=\"umapTab\"]")
   shinyjs::hide(selector = "a[data-value=\"nonLinReductTab\"]")
   shinyjs::hide(selector = "a[data-value=\"finishTab\"]")
   shinyjs::hide(selector = "a[data-value=\"findMarkersTab\"]")
@@ -79,6 +76,8 @@ inputDataReactive <- reactive({
     )
 
 
+    scriptCommands = c()
+    
     filesdir = dirname(inFile[1,4])
 
     #inFile = inFile$datapath
@@ -88,19 +87,21 @@ inputDataReactive <- reactive({
     file.rename(inFile$datapath[3],paste0(filesdir,'/',inFile$name[3]))
 
     withProgress(message = "Reading 10X data, please wait ...",{
-      
-      # cellranger < 3.0
+    
+    # cellranger < 3.0
     if(any(list.files(filesdir) == "genes.tsv.gz"))
     {
-      
       file.rename(file.path(filesdir,"genes.tsv.gz"), file.path(filesdir,"features.tsv.gz"))
-      
     }
     
-      shiny::setProgress(value = 0.8)
+    shiny::setProgress(value = 0.8)
       
     pbmc.data <- Read10X(data.dir = filesdir)
-
+    scriptCommands$readCounts = paste0('counts.data <- Read10X(data.dir = "/path/to/10x/dir/")')
+    isolate({
+      myValues$scriptCommands = scriptCommands
+    })
+    
     })
     #Trim data for easy testing
     #pbmc.data = cbind(pbmc.data[,1:100],pbmc.data[,17791:17891])
@@ -115,12 +116,22 @@ inputDataReactive <- reactive({
     inFile = inFile$datapath
 
     seqdata <- read.csv(inFile[1], header=TRUE, sep=",", row.names = 1)
+    
+    scriptCommands$readCounts = paste0('counts.data <- read.csv("/path/to/csv/counts/file.csv", header=TRUE, sep=",", row.names = 1)')
+    
     print('uploaded seqdata')
     if(ncol(seqdata) < 2) { # if file appears not to work as csv try tsv
       seqdata <- read.csv(inFile[1], header=TRUE, sep="\t", row.names = 1)
+      
+      scriptCommands$readCounts = paste0('counts.data <- read.csv("/path/to/csv/counts/file.csv", header=TRUE, sep="\\t", row.names = 1)')
+      
       print('changed to tsv, uploaded seqdata')
     }
 
+    isolate({
+      myValues$scriptCommands = scriptCommands
+    })
+    
     js$addStatusIcon("datainput","done")
     js$collapse("uploadbox")
     return(list('data'=seqdata))
@@ -131,6 +142,10 @@ inputDataReactive <- reactive({
       js$addStatusIcon("datainput","loading")
       pbmc.data <- Read10X(data.dir = "www/hg19/")
 
+      isolate({
+        myValues$scriptCommands$readCounts = paste0('counts.data <- Read10X(data.dir = "/path/to/10x/dir/hg19/")')
+      })
+      
       js$addStatusIcon("datainput","done")
       js$collapse("uploadbox")
       return(list('data'=pbmc.data))
@@ -220,6 +235,9 @@ initSeuratObjReactive <-
                     pbmc <- CreateSeuratObject(counts = rawData, min.cells = input$mincells, min.features = input$mingenes,
                                                project = input$projectname, names.delim = "\\-", names.field = 2)
                     
+                    myValues$scriptCommands$createSeurat = paste0('pbmc <- CreateSeuratObject(counts = counts.data, min.cells = ',input$mincells,', min.features = ',input$mingenes,',
+                                               project = "',input$projectname,'")')
+                    
                     if(all(is.na(Idents(pbmc)))) {
                       idents <- rep.int("1", times = length(Idents(pbmc)))
                       pbmc[['orig.ident']] <- idents
@@ -228,10 +246,16 @@ initSeuratObjReactive <-
                     
                     shiny::setProgress(value = 0.8, detail = "Done.")
                     js$addStatusIcon("datainput","done")
-                    js$addStatusIcon("qcFilterTab","next")
                     shinyjs::show(selector = "a[data-value=\"qcFilterTab\"]")
+                    js$addStatusIcon("qcFilterTab","next")
+                    
                     shinyjs::runjs("window.scrollTo(0, 0)")
 
                     return(list('pbmc'=pbmc))
                   })})
 
+
+vectorToStr <- function(v)
+{
+  paste0('c(', paste0("'",v,"'", collapse = ","), ')')
+}

@@ -23,6 +23,7 @@ findVariableGenesReactive <-
       pbmc <- NormalizeData(object = pbmc, normalization.method = input$normMethod,
                             scale.factor = input$scaleFactor)
       
+      myValues$scriptCommands$normalize = paste0('pbmc <- NormalizeData(object = pbmc, normalization.method = "',input$normMethod,'", scale.factor = ', input$scaleFactor, ')')
       
       shiny::setProgress(value = 0.6, detail = "Finding Variable Genes ...")
       
@@ -36,14 +37,16 @@ findVariableGenesReactive <-
       pbmc <- FindVariableFeatures(object = pbmc, selection.method = 'mean.var.plot', mean.cutoff = c( input$xlowcutoff, input$xhighcutoff), dispersion.cutoff = c(input$ycutoff, Inf))
       print(paste("number of genes found: ", length(x = VariableFeatures(object = pbmc))))
       
-      
-      shiny::setProgress(value = 0.8, detail = "Scaling Data (this might take a while)...")
+      myValues$scriptCommands$findVarGenes = paste0('pbmc <- FindVariableFeatures(object = pbmc, selection.method = ','\'mean.var.plot\', mean.cutoff = c( ',input$xlowcutoff,', ',input$xhighcutoff,'), dispersion.cutoff = c(',input$ycutoff,', Inf))')
+      shiny::setProgress(value = 0.8, detail = "Scaling Data (this might take a while) ...")
       
       #pbmc <- ScaleData(object = pbmc, vars.to.regress = input$varsToRegress, do.par = T)
       
       #v3
       plan("multiprocess", workers = 3)
       pbmc <- ScaleData(object = pbmc, vars.to.regress = input$varsToRegress)
+      
+      myValues$scriptCommands$scaleData = paste0("pbmc <- ScaleData(object = pbmc, vars.to.regress = ",vectorToStr(input$varsToRegress),")")
       
       shinyjs::show(selector = "a[data-value=\"runPcaTab\"]")
       shinyjs::show(selector = "a[data-value=\"filterNormSelectTab\"]")
@@ -53,8 +56,7 @@ findVariableGenesReactive <-
       js$addStatusIcon("runPcaTab","next")
       return(list('pbmc'=pbmc))
     })
-  }
-  )
+  })
 
 
 output$findVariableGenesDone <- reactive({
@@ -92,6 +94,8 @@ sctransformReactive <-
       
       plan("multiprocess", workers = 3)
       pbmc <- SCTransform(object = pbmc, verbose = F, vars.to.regress = input$varsToRegressUmap)
+      
+      myValues$scriptCommands$sctransform = paste0("pbmc <- SCTransform(object = pbmc, vars.to.regress = ",vectorToStr(input$varsToRegressUmap),")")
       
       shinyjs::show(selector = "a[data-value=\"runPcaTab\"]")
       #shinyjs::show(selector = "a[data-value=\"filterNormSelectTab\"]")

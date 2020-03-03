@@ -6,7 +6,7 @@ observe({
 clusterCellsReactive <-
   eventReactive(input$clusterCells, {
     validate(
-      need(length(input$clustPCDim) > 0, message = "Select at least two PC to use.")
+      need(length(input$clustPCDim) > 1, message = "Select at least two PC to use.")
     )
     withProgress(message = "Processing , please wait",{
       print("Finding Clusters")
@@ -23,20 +23,26 @@ clusterCellsReactive <-
       # pbmc <- FindClusters(object = pbmc, reduction.type = input$reducType, dims.use = input$clustPCDim1:input$clustPCDim2,
       #                      resolution = input$clustResolution, print.output = 0, save.SNN = TRUE)
 
-      pbmc <- RunUMAP(object = pbmc, dims = as.numeric(c(input$clustPCDim)), verbose = FALSE)
+      #pbmc <- RunUMAP(object = pbmc, dims = as.numeric(c(input$clustPCDim)), verbose = FALSE)
+      pbmc <- RunUMAP(object = pbmc, dims = as.numeric(c(input$clustPCDim)), reduction = input$reducType,verbose = FALSE)
       
       #v3
       pbmc <- FindNeighbors(object = pbmc, dims = as.numeric(c(input$clustPCDim)))
       myValues$clusterPrintOutput <- capture.output(pbmc <- FindClusters(object = pbmc, resolution = input$clustResolution))
       
+      myValues$scriptCommands$runUmap = paste0("pbmc <- RunUMAP(object = pbmc, dims = as.numeric(",vectorToStr(input$clustPCDim),"), reduction = '",input$reducType,"')")
+      myValues$scriptCommands$findNei = paste0("pbmc <- FindNeighbors(object = pbmc, dims = as.numeric(",vectorToStr(input$clustPCDim),"))")
+      myValues$scriptCommands$findClusters = paste0("pbmc <- FindClusters(object = pbmc, resolution = ",input$clustResolution,")")
+      
+      myValues$scriptCommands$dimplotUmap = paste0('DimPlot(pbmc, reduction = "umap")')
+      
       updateSelectInput(session, "tsnePCDim", selected = c(input$clustPCDim))
-      # updateNumericInput(session, "umapPCDim1", value = input$clustPCDim1)
-      # updateNumericInput(session, "umapPCDim2", value = input$clustPCDim2)
       
       shinyjs::show(selector = "a[data-value=\"nonLinReductTab\"]")
       shinyjs::show(selector = "a[data-value=\"clusterCells\"]")
 
-      updateSelectizeInput(session, "tsnePCDim", choices = 1:50, selected = input$clustPCDim)
+      #updateSelectizeInput(session, "tsnePCDim", choices = 1:50, selected = input$clustPCDim)
+      updateSelectInput(session, "tsnePCDim", selected = c(input$clustPCDim))
       
       js$addStatusIcon("clusterCells","done")
       js$addStatusIcon("nonLinReductTab","next")
