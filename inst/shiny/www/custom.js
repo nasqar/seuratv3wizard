@@ -7,6 +7,7 @@ shinyjs.addStatusIcon = function(params)
 
     menuitem.children('#loading-bar-spinner').remove();
     menuitem.children('#checkmarkdone').remove();
+    menuitem.children('#xmarkdone').remove();
     menuitem.children('span.badge').remove();
 
 
@@ -29,7 +30,13 @@ shinyjs.addStatusIcon = function(params)
         
         $("a.btn").removeClass("hidden");
         break;
-
+      case 'fail':
+        menuitem.append('<svg id="xmarkdone" class="xmark pull-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">\
+    <circle class="xmark__circle" cx="26" cy="26" r="25" fill="none"/> \
+    <path class="xmark__check" fill="none" d="M16 16 36 36 M36 16 16 36"/></svg>');
+        $("button.btn").addClass("button-3d");
+        $("button.btn").removeAttr("disabled");
+        break;
       case 'next':
         menuitem.append('<span class="badge" style="float: right; background-color:#4877d2">Next</span>');
         break;
