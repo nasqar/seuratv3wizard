@@ -11,11 +11,13 @@ observe({
     updateSelectizeInput(session,'clusterNumVS2',
                          choices=levels(pbmc),selected = input$clusterNumVS2)
     
+    genesToPlot = rownames( GetAssayData(pbmc, slot = "scale.data") )
+    
     updateSelectizeInput(session,'genesToPlotVln',
-                         choices=myValues$clusterGenes)
+                         choices=genesToPlot)
     
     updateSelectizeInput(session,'genesToFeaturePlot',
-                         choices=myValues$clusterGenes)
+                         choices=genesToPlot)
   }
   
 })
@@ -34,6 +36,8 @@ findClusterMarkersReactive <- eventReactive(input$findClusterMarkers, {
     
     plan("multiprocess", workers = 3)
     cluster.markers <- FindMarkers(object = pbmc, ident.1 = input$clusterNum, min.pct = input$minPct, test.use = input$testuse, only.pos = input$onlypos)
+    
+    myValues$scriptCommands$findMarkers = paste0("cluster.markers <- FindMarkers(object = pbmc, ident.1 = ",input$clusterNum,", min.pct = ",input$minPct,", test.use = ",input$testuse,", only.pos = ",input$onlypos,")")
     
     shiny::setProgress(value = 0.8, detail = "Done.")
     
@@ -91,7 +95,9 @@ findClusterMarkersVSReactive <- eventReactive(input$findClusterMarkersVS, {
     shiny::setProgress(value = 0.4, detail = "Finding cluster markers ...")
     
     plan("multiprocess", workers = 3)
-    cluster.markers <- FindMarkers(object = pbmc, ident.1 = input$clusterNumVS1, ident.2 = input$clusterNumVS2, min.pct = input$minPct, test.use = input$testuseVS, only.pos = input$onlyposVS)
+    cluster.markers <- FindMarkers(object = pbmc, ident.1 = input$clusterNumVS1, ident.2 = input$clusterNumVS2, min.pct = input$minPctvs, test.use = input$testuseVS, only.pos = input$onlyposVS)
+    
+    myValues$scriptCommands$findMarkers = paste0("cluster.markersVS <- FindMarkers(object = pbmc, ident.1 = ",input$clusterNumVS1,", ident.2 = ",input$clusterNumVS2,", min.pct = ",input$minPctvs,", test.use = ",input$testuseVS,", only.pos = ",input$onlyposVS,")")
     
     if(is.null(myValues$clusterGenes))
       myValues$clusterGenes = rownames(cluster.markers)
@@ -152,6 +158,8 @@ findClusterMarkersAllReactive <- eventReactive(input$findClusterMarkersAll, {
     plan("multiprocess", workers = 3)
     cluster.markers <- FindAllMarkers(object = pbmc, min.pct = input$minPctAll, test.use = input$testuseAll, only.pos = input$onlyposAll, logfc.threshold = input$threshAll)
     
+    myValues$scriptCommands$findAllMarkers = paste0("cluster.markers <- FindAllMarkers(object = pbmc, min.pct = ",input$minPctAll,", test.use = '",input$testuseAll,"', only.pos = ",input$onlyposAll,", logfc.threshold = ",input$threshAll,")")
+    
     if(input$numGenesPerCluster > 0){
       cluster.markers = cluster.markers %>% group_by(cluster) %>% top_n(input$numGenesPerCluster, avg_logFC)
       
@@ -200,20 +208,27 @@ outputOptions(output, 'clusterMarkersAllAvailable', suspendWhenHidden=FALSE)
 output$clusterHeatmap <- renderPlot({
   if(input$generateHeatmap > 0){
     withProgress(message = "Processing , please wait", {
-      clusterHeatmapFunc()
+      pbmc = myValues$finalData$pbmc
+      isolate({
+        allmarkers = findClusterMarkersAllReactive()$clustermarkers
+        allmarkers %>% group_by(cluster) %>% top_n(n = input$topGenesPerCluster, wt = avg_logFC) -> selectedGenes
+      })
+      
+      DoHeatmap(object = pbmc, features = selectedGenes$gene)
     })
   }
 })
 
 #cluster heatmap output and download handler
-clusterHeatmapFunc = reactive({
-  pbmc = myValues$finalData$pbmc
-  isolate({
-    allmarkers = findClusterMarkersAllReactive()$clustermarkers
-    allmarkers %>% group_by(cluster) %>% top_n(n = input$topGenesPerCluster, wt = avg_logFC) -> selectedGenes
-  })
-  DoHeatmap(object = pbmc, features = selectedGenes$gene)
-})
+# clusterHeatmapFunc = reactive({
+#   pbmc = myValues$finalData$pbmc
+#   isolate({
+#     allmarkers = findClusterMarkersAllReactive()$clustermarkers
+#     allmarkers %>% group_by(cluster) %>% top_n(n = input$topGenesPerCluster, wt = avg_logFC) -> selectedGenes
+#   })
+#   browser()
+#   DoHeatmap(object = pbmc, features = selectedGenes$gene)
+# })
 
 output$downloadClusterHeatmap <- downloadHandler(
   filename <- function() {
@@ -268,6 +283,10 @@ featurePlotFunc = reactive({
   )
   
   pbmc = myValues$finalData$pbmc
+  
+  validate(
+    need(!is.null(pbmc@reductions[[input$reducUseFeature]]), message = paste(input$reducUseFeature, "was not computed!, choose another reduction"))
+  )
   
   if(input$sctransformOption == 'defaultPath')
     FeaturePlot(object = pbmc, features = input$genesToFeaturePlot, cols = c("gray88", "blue"),reduction = input$reducUseFeature, pt.size = 2)

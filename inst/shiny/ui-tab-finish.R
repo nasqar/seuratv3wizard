@@ -1,7 +1,7 @@
 tabItem(tabName = "finishTab",
         fluidRow(column(
           12,
-          h3(strong("Download R Object")),
+          h3(strong("Download R Object/Script")),
           hr(),
           tags$div(
             class = "BoxArea2",
