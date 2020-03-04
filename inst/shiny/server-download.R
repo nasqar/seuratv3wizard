@@ -105,7 +105,9 @@ observe({
 
 output$seuratScriptExists <-
   reactive({
-    return(file.exists(myValues$scriptfilepath))
+    if(!is.null(myValues$scriptfilepath))
+      return(file.exists(myValues$scriptfilepath))
+    return(F)
     
   })
 outputOptions(output, 'seuratScriptExists', suspendWhenHidden=F)
