@@ -14,10 +14,23 @@ runPcaReactive <-
 
       js$addStatusIcon("runPcaTab","loading")
 
-      shiny::setProgress(value = 0.4, detail = "Performing PCA ...")
+      shiny::setProgress(value = 0.4, detail = "Running PCA reduction ...")
 
       pbmc <- RunPCA(object = pbmc, features = VariableFeatures(object = pbmc), verbose = FALSE)
-
+      myValues$scriptCommands$runPca = "pbmc <- RunPCA(object = pbmc, features = VariableFeatures(object = pbmc))"
+      myValues$scriptCommands$printPca = paste0('print(pbmc[["pca"]], dims = ','1:',input$numPCs,', nfeatures = ',input$numGenes,')')
+      
+      if(input$runIca)
+      {
+        shiny::setProgress(value = 0.7, detail = "Running ICA reduction ...")
+        
+        pbmc <- RunICA(object = pbmc, verbose = FALSE)
+        updateSelectizeInput(session, "reducType", choices = c("pca","ica"), selected = "pca")
+        
+        myValues$scriptCommands$runIca = "pbmc <- RunICA(object = pbmc)"
+        myValues$scriptCommands$printIca = paste0('print(pbmc[["ica"]], dims = ','1:',input$numPCs,', nfeatures = ',input$numGenes,')')
+      }
+      
       shinyjs::show(selector = "a[data-value=\"vizPcaPlot\"]")
       shinyjs::show(selector = "a[data-value=\"pcaPlot\"]")
       shinyjs::show(selector = "a[data-value=\"heatmapPlot\"]")
@@ -32,9 +45,6 @@ runPcaReactive <-
 
       numCellsToUse = ifelse(ncol(x = pbmc) > 500, 500, ncol(x = pbmc))
       updateNumericInput(session, "cellsToUse", value = numCellsToUse)
-      
-      updateSelectizeInput(session, "clustPCDim", choices = 1:50, selected = 1:10)
-      
       updateTabItems(session, "tabs", "runPcaTab")
 
       return(list('pbmc'=pbmc))
@@ -67,4 +77,28 @@ observeEvent(input$vizPca, {
 
   #updateTabItems(session, "tabs", "vizPcaPlot")
   GotoTab("vizPcaPlot")
+})
+
+
+output$icsPrintAvailable <- reactive({
+  pbmc = runPcaReactive()$pbmc
+  
+  if(is.null(pbmc@reductions$ica))
+    return(FALSE)
+  return(TRUE)
+})
+outputOptions(output, 'icsPrintAvailable', suspendWhenHidden=FALSE)
+
+output$icsPrint <- renderText({
+  
+  pbmc <- runPcaReactive()$pbmc
+  
+  #printStr = capture.output(PrintPCA(object = pbmc, pcs.print = 1:input$numPCs, genes.print = input$numGenes, use.full = FALSE))
+  
+  printStr = capture.output(print(x = pbmc[['ica']], dims = 1:input$numPCs, nfeatures = input$numGenes, projected = FALSE))
+  
+  printStr = gsub("\\[1\\]","",printStr)
+  printStr = paste(printStr, collapse = "<br>")
+  
+  HTML(printStr)
 })

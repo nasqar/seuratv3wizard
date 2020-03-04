@@ -62,7 +62,7 @@ tabItem(tabName = "vizMarkersTab",
                                                                          'Start typing gene name'
                                                                      )
                                                       ),
-                                                      selectInput("reducUseFeature","Reduction method to use",choices = c("tsne","pca","umap"), selected = "tsne"),
+                                                      selectInput("reducUseFeature","Reduction method to use",choices = c("umap","tsne","pca","ica"), selected = "umap"),
                                                       actionButton("plotFeatureMarkers","Plot",class = "button button-3d button-block button-pill button-primary", style = "width: 100%")
                                                     ),
                                                     conditionalPanel(
