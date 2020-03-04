@@ -340,7 +340,7 @@ observe({
         
         if(input$sctransformOption == 'defaultPath')
         {
-          ExportToCellbrowser(pbmc, dir= folderpath, cb.dir=foldercbpath, markers.file = myValues$clusterFilePath)
+          ExportToCellbrowser(pbmc, dir= folderpath, cb.dir=foldercbpath, reductions = "umap", markers.file = myValues$clusterFilePath)
         }
         else
         {
