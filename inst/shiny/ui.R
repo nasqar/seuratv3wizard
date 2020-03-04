@@ -17,6 +17,7 @@ require(ggplot2)
 require(reticulate)
 require(uuid)
 require(sctransform)
+require(stringr)
 
 # for NIDCR shiny server
 # reticulate::use_python("/home/shiny/miniconda3/bin/python", required= TRUE)
@@ -119,13 +120,7 @@ ui <- tagList(
       <p align="center" width="4">Core Bioinformatics, Center for Genomics and Systems Biology, NYU Abu Dhabi</p>
       <p align="center" width="4">Github: <a href="https://github.com/nasqar/SeuratV3Wizard/">https://github.com/nasqar/SeuratV3Wizard/</a></p>
       <p align="center" width="4">Created by: <a href="mailto:ay21@nyu.edu">Ayman Yousif</a> </p>
-      <p align="center" width="4">Using Seurat version 3.1.0 </p>
-      <p align="center" width="4"><strong>Acknowledgements: </strong></p>
-      <p align="center" width="4">1) Rahul Satija, Andrew Butler and Paul Hoffman (2017). Seurat: Tools for Single Cell Genomics. <a href="https://CRAN.R-project.org/package=Seurat" target="_blank">https://CRAN.R-project.org/package=Seurat</a></p>
-      <p align="center" width="4">2) <a href="http://satijalab.org/seurat/" target="_blank">Satija Lab</a></p>
-      <p align="center" width="4">3) <a href="https://github.com/ChristophH/sctransform" target="_blank">Christoph Hafemeister, Rahul Satija (2019). Normalization and variance stabilization of single-cell RNA-seq data using regularized negative binomial regression</a></p>
-      <p align="center" width="4">4) <a href="https://github.com/maximilianh/cellBrowser" target="_blank">UCSC Single Cell Browser</a></p>
-      <p align="center" width="4">Copyright (C) 2019, code licensed under GPLv3</p>'
+      <p align="center" width="4">Using Seurat version 3.1.0 </p>'
   )
   ),
   tags$script(src = "imgModal.js")

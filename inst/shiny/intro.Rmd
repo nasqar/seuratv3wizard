@@ -121,5 +121,12 @@ Various forms of visualizations are included:
     * Violin Plot
     * Feature Plot
 
+## **Acknowledgements**
+---
+- Rahul Satija, Andrew Butler and Paul Hoffman (2017). Seurat: Tools for Single Cell Genomics. <a href="https://CRAN.R-project.org/package=Seurat" target="_blank">https://CRAN.R-project.org/package=Seurat</a>
+- <a href="http://satijalab.org/seurat/" target="_blank">Satija Lab</a>
+- <a href="https://github.com/ChristophH/sctransform" target="_blank">Christoph Hafemeister, Rahul Satija (2019). Normalization and variance stabilization of single-cell RNA-seq data using regularized negative binomial regression</a>
+- <a href="https://github.com/maximilianh/cellBrowser" target="_blank">UCSC Single Cell Browser</a>
+
 ---
 

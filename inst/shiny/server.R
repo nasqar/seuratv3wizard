@@ -1,9 +1,9 @@
 
 #max upload 300mb
 options(shiny.maxRequestSize = 400*1024^2)
-#options(future.globals.maxSize = 10 * 1024 ^ 3)
+options(future.globals.maxSize = 3000 * 1024 ^ 2)
 library(future)
-
+#plan("multiprocess", workers = 2)
 
 server <- function(input, output, session) {
 
@@ -25,7 +25,6 @@ server <- function(input, output, session) {
 
   source("server-clusterCells.R",local = TRUE)
 
-  #source("server-tsne.R",local = TRUE)
   source("server-nonLinReduction.R", local = TRUE)
 
   source("server-download.R",local = TRUE)
@@ -33,7 +32,6 @@ server <- function(input, output, session) {
   source("server-findMarkers.R",local = TRUE)
 
   GotoTab <- function(name){
-    #updateTabItems(session, "tabs", name)
     
     shinyjs::show(selector = paste0("a[data-value=\"",name,"\"]"))
     

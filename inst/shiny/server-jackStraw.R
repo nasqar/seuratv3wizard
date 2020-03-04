@@ -19,10 +19,13 @@ jackStrawReactive <-
       #pbmc <- JackStraw(object = pbmc, num.replicate = input$numReplicates, do.par = T)
       
       #v3
-      plan("multiprocess", workers = parallel::detectCores() / 2)
+      plan("multiprocess", workers = 3)
       pbmc <- JackStraw(object = pbmc, num.replicate = input$numReplicates)
       pbmc <- ScoreJackStraw(object = pbmc, dims = input$jsPcsToPlot1:input$jsPcsToPlot2)
       
+      myValues$scriptCommands$jackstraw = paste0("JackStraw(object = pbmc, num.replicate = ",input$numReplicates,")")
+      myValues$scriptCommands$scoreJackstraw = paste0("pbmc <- ScoreJackStraw(object = pbmc, dims = ",input$jsPcsToPlot1,':',input$jsPcsToPlot2,")")
+      myValues$scriptCommands$jackstrawPlot = paste0("JackStrawPlot(pbmc, dims = ",input$jsPcsToPlot1,':',input$jsPcsToPlot2,")")
       ########
       
       shiny::setProgress(value = 0.9, detail = "Done.")
@@ -51,6 +54,8 @@ output$pcElbowPlot <- renderPlot({
     ##
     shinyjs::show(selector = "a[data-value=\"clusterCells\"]")
     shinyjs::show(selector = "a[data-value=\"jackStrawPlot\"]")
+    
+    myValues$scriptCommands$elbowPlot = "ElbowPlot(object = pbmc)"
     
     js$addStatusIcon("jackStrawPlot","done")
     js$addStatusIcon("clusterCells","next")

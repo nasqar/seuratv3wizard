@@ -14,7 +14,12 @@ tsneReactive <-
         
         shiny::setProgress(value = 0.4, detail = "Running TSNE Reduction ...")
         
-        pbmc <- RunTSNE(object = pbmc, dims.use = as.numeric(c(input$tsnePCDim)), perplexity = input$tsnePerplexity, num_threads = parallel::detectCores()/2)
+        pbmc <- RunTSNE(object = pbmc, dims.use = as.numeric(c(input$tsnePCDim)), 
+                        perplexity = input$tsnePerplexity, 
+                        reduction = input$reducType,
+                        num_threads = 3)
+        
+        myValues$scriptCommands$runTsne = paste0("pbmc <- RunTSNE(object = pbmc, dims.use = as.numeric(",vectorToStr(input$tsnePCDim),"), perplexity = ",input$tsnePerplexity,", reduction = '",input$reducType,"')")
         
         updateSelectizeInput(session,'clusterNumCells', choices=levels(pbmc), selected=NULL)
         

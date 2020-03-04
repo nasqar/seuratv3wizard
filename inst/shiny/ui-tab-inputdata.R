@@ -12,7 +12,7 @@ tabItem(tabName = "datainput",
                                             'Example Data (PBMC)'="examplecounts"
                                           ),selected = "uploadNonUmi"),
                              conditionalPanel(condition="input.data_file_type=='upload10x'",
-                                              p("10X Data, 1 .mtx file, and 2 .tsv files")
+                                              p("10X Data, 1 .mtx.gz file, and 2 .tsv.gz files")
                                               #fileInput('datafile', 'Choose File Containing Data (.mtx, .tsv)', multiple = TRUE)
                              ),
 
