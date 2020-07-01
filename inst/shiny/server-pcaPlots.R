@@ -1,10 +1,24 @@
-
-output$vizPcaPlot <- renderPlot({
-
+vizPcaPlotFunc = reactive({
   pbmc <- runPcaReactive()$pbmc
 
   VizDimLoadings(object = pbmc, dims = input$pcsToPlotStart:input$pcsToPlotEnd)
 })
+
+
+output$vizPcaPlot <- renderPlot({
+  vizPcaPlotFunc()
+})
+
+output$downloadVizPcaPlot <- downloadHandler(
+  filename <- function() {
+    paste(input$projectname, "_vizPcaPlot", input$vizPcaDownloadAs, sep = "")
+  },
+  content <- function(file) {
+    ggsave(file, vizPcaPlotFunc(), width = input$vizPcaDownloadWidth,
+           height = input$vizPcaDownloadHeight, units = "cm", dpi = 300)
+  },
+  contentType = "image"
+)
 
 # output$pcaPlot <- renderPlot({
 # 
