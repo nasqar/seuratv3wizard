@@ -64,3 +64,22 @@ output$heatmapPlot <- renderPlot({
 
   DimHeatmap(object = pbmc, dims = input$pcsToUse1:input$pcsToUse2, cells = input$cellsToUse, balanced = TRUE)
 })
+
+output$downloadHeatmap <- downloadHandler(
+  filename <- function() {
+    paste(input$projectname, "_PcaHeatMap", input$heatmapDownloadAs,sep="")
+  },
+  content <- function(file) {
+    pbmc <- runPcaReactive()$pbmc
+    if (input$heatmapDownloadAs == ".svg") {
+      svglite(file, width = input$heatmapDownloadWidth, height = input$heatmapDownloadHeight, res = 300)
+    } else if (input$heatmapDownloadAs == ".jpeg") {
+      jpeg(file, width = input$heatmapDownloadWidth, height = input$heatmapDownloadHeight, units = 'cm', res = 200)
+    }else {
+      png(file, width = input$heatmapDownloadWidth, height = input$heatmapDownloadHeight, units = 'cm', res = 300)
+    }
+    DimHeatmap(object = pbmc, dims = input$pcsToUse1:input$pcsToUse2, cells = input$cellsToUse, balanced = TRUE)
+    dev.off()
+  },
+  contentType = "image"
+)
