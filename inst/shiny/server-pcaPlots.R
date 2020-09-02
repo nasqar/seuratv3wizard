@@ -30,7 +30,7 @@ output$downloadVizPcaPlot <- downloadHandler(
 #PCA plot output and download handler
 pcaPlotFunc = reactive({
   pbmc <- runPcaReactive()$pbmc
-  DimPlot(object = pbmc, dims = c(input$dim1ica,input$dim2ica), reduction = "pca")
+  DimPlot(object = pbmc, dims = c(input$dim1,input$dim2), reduction = "pca")
 })
 
 output$pcaPlot <- renderPlot({
